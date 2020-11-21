@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.github.softwarevax</groupId>
+		<artifactId>dictionary</artifactId>
+		<version>0.0.1-RELEASE</version>
+	</parent>
+
+	<groupId>com.github.softwarevax</groupId>
+	<artifactId>dictionary-mybatis-demo</artifactId>
+	<version>0.0.1-RELEASE</version>
+	<name>dictionary-mybatis-demo</name>
+	<packaging>pom</packaging>
+	<description>dictionary-mybatis-demo</description>
+
+	<modules>
+		<module>demo-dictionary-mybatis</module>
+		<module>demo-starter-dictionary-mybatis</module>
+	</modules>
+
+	<properties>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+
+	</dependencies>
+
+	<build>
+	</build>
+
+</project>
