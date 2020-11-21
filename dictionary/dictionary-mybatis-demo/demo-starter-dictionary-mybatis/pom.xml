@@ -13,7 +13,7 @@
 	<artifactId>demo-starter-dictionary-mybatis</artifactId>
 	<version>0.0.1-RELEASE</version>
 	<name>demo-starter-dictionary-mybatis</name>
-	<description>demo-starter-dictionary-mybatis</description>
+	<description>Integrated dictionary plugin for MyBATIS in springboot project</description>
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
