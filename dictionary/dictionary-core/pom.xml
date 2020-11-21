@@ -13,7 +13,7 @@
 	<artifactId>dictionary-core</artifactId>
 	<version>0.0.1-RELEASE</version>
 	<name>dictionary-core</name>
-	<description>dictionary-core</description>
+	<description>dictionary plugins dictionary-core</description>
 
 	<properties>
 		<java.version>1.8</java.version>
