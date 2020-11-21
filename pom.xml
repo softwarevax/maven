@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+	<groupId>com.github.softwarevax</groupId>
+	<artifactId>plugin-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<name>plugin-parent</name>
+	<packaging>pom</packaging>
+	<description>some plugins</description>
+
+	<url>https://github.com/softwarevax/maven</url>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<!-- maven 设置jdk版本 -->
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+	</properties>
+
+	<modules>
+		<module>dictionary</module>
+	</modules>
+
+	<dependencies>
+
+	</dependencies>
+
+	<build>
+
+	</build>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<scm>
+		<tag>master</tag>
+		<url>git@github.com:cloudnil/marathon-client.git</url>
+		<connection>scm:git:git@github.com:cloudnil/marathon-client.git</connection>
+		<developerConnection>scm:git:git@github.com:cloudnil/marathon-client.git</developerConnection>
+	</scm>
+	<developers>
+		<developer>
+			<name>twcao</name>
+			<email>1244497026@qq.com</email>
+			<organization>softwarevax</organization>
+		</developer>
+	</developers>
+
+</project>
