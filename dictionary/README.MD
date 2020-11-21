@@ -1,22 +1,26 @@
-## 数据字典
-### 1、插件功能描述:
-```
-1、当表中含有的字典项较多时，需要进行多次联字典表进行查询，从而影响查询速度和开发速度。此插件的目的在于改善此过程。
-2、使用注解，将字典项中的编码替换为文本，如表中返回的字典编码"MAN",需要连接字典表，将“MAN”查出“男”。使用此插件，一个注解解决问题。实体中添加了注解
-3、当字典表数据较多时，不建议使用，如用户表，不适合全部加载到内存中
-```
-### 2、集成步骤
-#### 2.1、注册mybatis插件
-##### 2.1.1、pom引入依赖包
-将此项目本地打包，在要使用的项目中引入
+## 数据字典插件
+github地址:https://github.com/softwarevax/maven.git
+
+maven依赖(已提交到中央仓库):
 ```
 <dependency>
-    <groupId>org.wit.ctw.plugin</groupId>
-    <artifactId>spring-dictionary</artifactId>
-    <version>1.0.0-RELEASE</version>
+  <groupId>com.github.softwarevax</groupId>
+  <artifactId>dictionary-core</artifactId>
+  <version>0.0.1-RELEASE</version>
+</dependency>
+<dependency>
+  <groupId>com.github.softwarevax</groupId>
+  <artifactId>starter-dictionary-mybatis</artifactId>
+  <version>0.0.1-RELEASE</version>
 </dependency>
 ```
-##### 2.1.2、注解说明
+### 1、插件功能描述:
+```
+1、当表中含有的字典项较多时，需要进行多次连字典表进行查询，从而影响查询和开发速度。此插件的目的在于改善此过程
+2、使用注解，将字典项中的编码替换为文本，如表中返回的字典编码"MAN",需要连接字典表，将“MAN”查出“男”。使用此插件，一个注解解决问题
+3、当字典表数据较多时，不建议使用，如用户表，不适合全部加载到内存中
+```
+#### 1.1、插件注解说明
 ```
 @Inherited
 @Documented
@@ -30,58 +34,60 @@ public @interface Dictionary {
     String[] conditions() default {""};
 }
 ```
-##### 2.1.2.1、table
+##### 1.1.2、table
 ```
 此字典项所在的表名，若为空，则从所有的缓存中查找，若找不到，则不替换。若有多个，找到第一个替换(有加载的顺序决定)
 ```
-##### 2.1.2.2、property
+##### 1.1.3、property
 ```
 要进行替换的属性，如性别sex=MAN属性，若为空，则替换当前属性，替换后sex=男，有时需要保留编码，则可以将文本放到另外一个新增的字段中，
 如property=sexLabel,替换后sex=MAN,sexLabel=男,若sexLabel属性是实体中不存在的属性，则替换失败
 ```
-##### 2.1.2.3、column、value
+##### 1.1.4、column、value
 ```
 即文本和编码对应字典表的列名
 ```
-##### 2.1.2.4、conditions
+##### 1.1.5、conditions
 ```
 条件，即字典项的唯一性，有时需要很多字段才可以确定，如一个字典表存放多个项目模块的，此时需要加上模块名，才能确定唯一的字典项。
 用户状态: ON===>在线 (type=user_status)
 好友状态: ON===>在线 (type=friend_status)
 此时没有办法区分，一般会多一个字段来确定字典项的唯一性，此时可以设置condition={"type = user_status"},可以有多个条件，多个条件and组合
 ```
-##### 2.1.3、注册interceptor插件
-###### 2.1.3.1、配置表sys_config结构说明
+### 2、集成字典
+#### 2.1、普通java项目集成字典插件
+##### 2.1.1、pom引入依赖包(非maven项目可从中央仓库下载后引入)
 ```
-CREATE TABLE `sys_config` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `label` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `value` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `type` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `description` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `sort` int(11) DEFAULT NULL,
-  `parent_id` int(11) DEFAULT '0',
-  `app_id` varchar(255) COLLATE utf8_bin DEFAULT '',
-  `create_user_id` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `update_user_id` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `create_time` datetime DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `remarks` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `del_flag` tinyint(4) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-)
+<dependency>
+  <groupId>com.github.softwarevax</groupId>
+  <artifactId>dictionary-core</artifactId>
+  <version>0.0.1-RELEASE</version>
+</dependency>
 ```
-###### 2.1.3.2、用户表app_user结构说明
+##### 2.1.2、配置字典表
 ```
-CREATE TABLE `app_user` (
-  `id` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `create_time` datetime DEFAULT NULL
-)
+DatabaseTable config = new DatabaseTable();
+String configTableName = "sys_config"; //配置表名
+String[] configColumn = new String[]{"label", "value", "type"}; //配置表中的列
+String[] configCondition = new String[]{"1 = 1"}; //筛选字典的条件
+config.setColumn(configColumn);
+config.setConditions(configCondition);
+config.setTableName(configTableName);
+DatabaseLoader dbLoader = new DatabaseLoader(dataSource);
+dbLoader.addDictionaryTable(config);
+DictionaryHelper.addLoader(dbLoader);
 ```
-###### 2.1.3.3、将插件注册到spring容器中
-column:
-DatabaseTable中的column为在注解中使用到的所有列，一般字典表只需要key，value，当需要多个字段确定唯一字典项时，就需要设置多个column
+说明：DatabaseTable中的column为在注解中使用到的所有列，一般字典表只需要key，value，当需要多个字段确定唯一字典项时，就需要设置多个column
+##### 2.1.3、调用
+```
+将需要转换的实体通过集合传入DictionaryHelper.resultWrapper()，返回的结果中，被Dictionary注解的字段，会被转换
+```
+#### 2.2、mybatis项目集成字典插件
+> (非spring环境，通过mybatis的xml配置文件集成), 参照demo-dictionary-mybatis
+
+##### 2.2.1、pom引入依赖包
+同2.1.1
+##### 2.2.2、将字典插件和mybatis拦截器注册到spring容器中
 ```
 @Bean
 public DictionaryInterceptor dictionaryInterceptor(DataSource dataSource) {
@@ -106,118 +112,131 @@ public DictionaryInterceptor dictionaryInterceptor(DataSource dataSource) {
     return interceptor;
 }
 ```
+#### 2.3、springboot集成字典插件
+> 参照demo-starter-dictionary-mybatis
+##### 2.2.1、pom引入字典插件starter依赖包，并使用@EnableDictionary注解开启字典插件功能
+```
+<dependency>
+  <groupId>com.github.softwarevax</groupId>
+  <artifactId>starter-dictionary-mybatis</artifactId>
+  <version>0.0.1-RELEASE</version>
+</dependency>
+```
+##### 2.2.2、配置文件配置字典表
+```
+# sys_config表
+dictionary.db-table[0].table-name=sys_config
+dictionary.db-table[0].column[0]=label
+dictionary.db-table[0].column[1]=value
+dictionary.db-table[0].column[2]=type
+dictionary.db-table[0].conditions[0]=1=1
+# app_user表
+dictionary.db-table[1].table-name=app_user
+dictionary.db-table[1].column[0]=id
+dictionary.db-table[1].column[1]=name
+
+# 5秒刷新一次缓存，默认1小时
+dictionary.configure.refresh-interval=5000
+```
 ### 3、字典插件使用
 #### 3.1、注解标记属性
+```
 使用注解后
 1、createUserId、updateUserId由原来的用户id改为用户姓名
 2、state由原来的状态"ON"改为"进行中"
 ```
+```
 public class Habit {
 
-    @Dictionary(table ="app_user", column = "name", value = "id")
-    private String createUserId;
-    
-    /**
-     * 当表没有加载时, 从全部缓存中查询, 效率较低
-     */
-    @Dictionary(table ="app_user", column = "name", value = "id")
-    private String updateUserId;
+   /**
+    * 直接将value替换key
+    */
+   @Dictionary(table ="app_user", column = "name", value = "id")
+   private String createUserId;
 
-    private String stateLabel;
+   /**
+    * table默认值，默认取加载的第一张表，property默认替换当前属性，column默认字典表的column为label, value默认字典表的value为value， conditions默认没有查询条件
+    * table：字典所在的表，可不配置，但性能会较低
+    * name：字典值value所在的列名
+    * value：字典键key所在的列名，字典没办法通过一个列确定时，可使用conditions再进行筛选，type为列名，habit_state为列的值, conditions内字符串格式为 key = value, 可含多个条件
+    * property：需要将替换后的字典，放到当前类的哪个属性中。默认是当前属性
+    */
+   @Dictionary(table ="app_user", column = "name", value = "id", property = "updateUserName")
+   private String updateUserId;
 
-    // table默认值，默认取加载的第一张表，property默认替换当前属性，column默认字典表的column为label, value默认字典表的value为value， conditions默认没有查询条件
-    //@Dictionary(table ="sys_config", property = "stateLabel", column = "label", value = "value", conditions = {"type = habit_state"})
-    @Dictionary(property = "stateLabel")
-    private String state;
+   private String updateUserName;
+
+   /**
+    保留当前属性的key， 将value放到另外一个属性stateLabel中
+    @Dictionary(table ="sys_config", property = "stateLabel", column = "label", value = "value", conditions = {"type = habit_state"})
+    */
+   @Dictionary
+   private String state;
 }
 ```
 #### 3.2、插件使用效果
 使用插件前
 ```
-{
-	"flag": true,
-	"data": {
-		"id": "d99839ee821511ea94d354ee75dd4fca",
-		"habitName": "",
-		"startDate": "2020-04-19",
-		"endDate": "2020-05-10",
-		"clockStartTime": "22:00",
-		"clockEndTime": "23:30",
-		"publishTime": "2020-04-19 16:14:33",
-		"createTime": "2020-04-19 16:14:33",
-		"createUserId": "1",
-		"updateTime": "2020-04-19 16:14:33",
-		"updateUserId": "1",
-		"stateLabel": null,
-		"state": "ON",
-		"records": []
-	},
-	"message": "接口调用成功"
-}
+[
+    {
+        "createUserId": "1",
+        "updateUserId": "1",
+        "updateUserName": null,
+        "state": "ON"
+    }
+]
 ```
-使用插件后1
+使用插件后
 ```
 注解
+/**
+ * 直接将value替换key
+ */
 @Dictionary(table ="app_user", column = "name", value = "id")
 private String createUserId;
 
-@Dictionary(table ="app_user", column = "name", value = "id")
+/**
+ * table默认值，默认取加载的第一张表，property默认替换当前属性，column默认字典表的column为label, value默认字典表的value为value， conditions默认没有查询条件
+ * table：字典所在的表，可不配置，但性能会较低
+ * name：字典值value所在的列名
+ * value：字典键key所在的列名，字典没办法通过一个列确定时，可使用conditions再进行筛选，type为列名，habit_state为列的值, conditions内字符串格式为 key = value, 可含多个条件
+ * property：需要将替换后的字典，放到当前类的哪个属性中。默认是当前属性
+ */
+@Dictionary(table ="app_user", column = "name", value = "id", property = "updateUserName")
 private String updateUserId;
 
-// 默认值，默认取加载的第一张表，默认替换当前属性，默认字典表的column为label, 默认字典表的value为value， 默认没有查询条件
-//@Dictionary(table ="sys_config", property = "stateLabel", column = "label", value = "value", conditions = {"type = habit_state"})
-@Dictionary(property = "stateLabel")
-private String state;
-{
-	"flag": true,
-	"data": {
-		"id": "d99839ee821511ea94d354ee75dd4fca",
-		"habitName": "",
-		"startDate": "2020-04-19",
-		"endDate": "2020-05-10",
-		"clockStartTime": "22:00",
-		"clockEndTime": "23:30",
-		"publishTime": "2020-04-19 16:14:33",
-		"createTime": "2020-04-19 16:14:33",
-		"createUserId": "vax",
-		"updateTime": "2020-04-19 16:14:33",
-		"updateUserId": "vax",
-		"stateLabel": "进行中",
-		"state": "ON",
-		"records": []
-	},
-	"message": "接口调用成功"
-}
-```
-使用插件后2
-```
-@Dictionary(table ="app_user", column = "name", value = "id")
-private String createUserId;
+private String updateUserName;
 
-@Dictionary(table ="app_user", column = "name", value = "id")
-private String updateUserId;
-
+/**
+ 保留当前属性的key， 将value放到另外一个属性stateLabel中
+ @Dictionary(table ="sys_config", property = "stateLabel", column = "label", value = "value", conditions = {"type = habit_state"})
+ */
 @Dictionary
 private String state;
-{
-	"flag": true,
-	"data": {
-		"id": "d99839ee821511ea94d354ee75dd4fca",
-		"habitName": "睡前刷牙",
-		"startDate": "2020-04-19",
-		"endDate": "2020-05-10",
-		"clockStartTime": "22:00",
-		"clockEndTime": "23:30",
-		"publishTime": "2020-04-19 16:14:33",
-		"createTime": "2020-04-19 16:14:33",
-		"createUserId": "vax",
-		"updateTime": "2020-04-19 16:14:33",
-		"updateUserId": "vax",
-		"stateLabel": null,
-		"state": "进行中",
-		"records": []
-	},
-	"message": "接口调用成功"
-}
+
+[
+    {
+        "createUserId": "vax",
+        "updateUserId": "1",
+        "updateUserName": "vax",
+        "state": "进行中"
+    }
+]
+```
+Version 0.0.1.RELEASE Finished at 2020-11-21
+
+Version 0.0.2.RELEASE
+```
+新增功能:
+1、
+```
+```
+修改功能:
+1、
 ```
 
+```
+待完成/完善功能
+1、提供刷新字典缓存的接口，以便在多模块的项目中，修改字典后，可以及时刷新字典
+2、字典嵌套时，也能完成字典项转换
+```
