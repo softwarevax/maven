@@ -10,10 +10,7 @@ import java.util.Map;
 
 /**
  * @author ctw
- * @Project： plugin-parent
- * @Package: com.github.softwarevax.dict.core
- * @Description:
- * @date 2020/11/21 11:30
+ * 2020/11/21 11:30
  */
 public class DictionaryUtils {
 
@@ -49,8 +46,8 @@ public class DictionaryUtils {
     /**
      * conditionArr[0] a = b
      * conditionArr[1] c = d
-     * @param conditionArr
-     * @return
+     * @param conditionArr 条件数组
+     * @return 解析后的条件
      */
     private static Map<String, Object> handleCondition(String[] conditionArr) {
         Map<String, Object> conditionMap = new HashMap<>();

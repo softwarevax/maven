@@ -12,10 +12,8 @@ import com.github.softwarevax.dict.core.Dictionary;
 import lombok.Data;
 
 /**
- * @description habit实体
- * @project dictionary-plugins-demo
- * @classname Habit
- * @date 2020/11/19 16:38
+ * habit实体
+ * 2020/11/19 16:38
  */
 @Data
 public class Habit {

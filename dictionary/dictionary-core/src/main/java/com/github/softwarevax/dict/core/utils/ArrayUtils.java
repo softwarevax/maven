@@ -2,10 +2,7 @@ package com.github.softwarevax.dict.core.utils;
 
 /**
  * @author ctw
- * @Project： plugin-parent
- * @Package: com.github.softwarevax.dict.utils.collection
- * @Description:
- * @date 2020/11/21 10:41
+ * 2020/11/21 10:41
  */
 public class ArrayUtils {
 

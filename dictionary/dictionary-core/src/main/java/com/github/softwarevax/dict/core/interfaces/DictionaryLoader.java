@@ -7,14 +7,14 @@ public interface DictionaryLoader {
 
     /**
      * 新增字典表
-     * @param dictTable
-     * @return
+     * @param dictTable 字典表
+     * @return 是否添加成功
      */
     boolean addDictionaryTable(DictionaryTable dictTable);
 
     /**
      * 加载/刷新缓存
-     * @return
+     * @return 加载后的缓存
      */
     Map<DictionaryTable, List<Map<String, Object>>> dictLoader();
 }

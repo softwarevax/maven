@@ -4,6 +4,7 @@ package com.github.softwarevax.dict.core.database;
 import com.github.softwarevax.dict.core.interfaces.DictionaryTable;
 import com.github.softwarevax.dict.core.enums.DictionaryType;
 
+
 public abstract class AbstractDbTable implements DictionaryTable {
 
     protected String tableName;

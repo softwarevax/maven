@@ -10,10 +10,7 @@ import javax.sql.DataSource;
 
 /**
  * @author ctw
- * @Project： plugin-parent
- * @Package: com.github.softwarevax.dict.mybatis
- * @Description:
- * @date 2020/11/21 13:30
+ * 2020/11/21 13:30
  */
 @Configuration
 public class BeanRegistry {

@@ -4,10 +4,7 @@ import java.util.List;
 
 /**
  * @author ctw
- * @Project： plugin-parent
- * @Package: com.github.softwarevax.dict.utils.collection
- * @Description:
- * @date 2020/11/21 11:47
+ * 2020/11/21 11:47
  */
 public class ListUtils {
 

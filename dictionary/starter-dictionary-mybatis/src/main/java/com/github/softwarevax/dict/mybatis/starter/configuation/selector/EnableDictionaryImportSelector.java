@@ -12,11 +12,7 @@ import java.util.Set;
 
 /**
  * @author twcao
- * @Title: EnableUaacImportSelector
- * @ProjectName support-spring-boot-starter
- * @Description: uaac配置文件导入类
- * @date 2018/12/6/006 22:59
- * @company iflytek
+ * 2018/12/6/006 22:59
  */
 public class EnableDictionaryImportSelector implements ImportSelector {
 

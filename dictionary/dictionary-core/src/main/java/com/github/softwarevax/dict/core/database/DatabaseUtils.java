@@ -2,10 +2,8 @@ package com.github.softwarevax.dict.core.database;
 
 /**
  * @author ctw
- * @Project： plugin-parent
- * @Package: com.github.softwarevax.dict.core.database
- * @Description:
- * @date 2020/11/21 10:55
+ * 数据库工具类
+ * 2020/11/21 10:55
  */
 public class DatabaseUtils {
 

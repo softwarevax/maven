@@ -18,10 +18,10 @@ public class BeanUtils {
 
     /**
      * 合并两个实体,target的属性,都将被source属性覆盖,即时该属性为empty
-     * @param target
-     * @param source
-     * @param <T>
-     * @return
+     * @param target 修改后的对象
+     * @param source 修改前的对象
+     * @param <T> 泛型约束
+     * @return 修改后的对象
      */
     public static <T> T merge(T target, T source) {
         try{
@@ -45,10 +45,10 @@ public class BeanUtils {
 
     /**
      * 实体中简单属性的getter方法，内部使用
-     * @param t
-     * @param propertyName
-     * @param <T>
-     * @return
+     * @param t 对象
+     * @param propertyName 属性名
+     * @param <T> 泛型约束
+     * @return 对象
      */
     private static <T> Object getSimplePropertyValue(T t, String propertyName) {
         if("".equals(propertyName) || propertyName == null) {
@@ -67,10 +67,10 @@ public class BeanUtils {
 
     /**
      * 简单属性和复杂属性的getter方法
-     * @param t
-     * @param propertyName
-     * @param <T>
-     * @return
+     * @param t 对象
+     * @param propertyName 属性名
+     * @param <T> 泛型约束
+     * @return 对象
      */
     public static <T> Object get(T t, String propertyName) {
         if(t == null || StringUtils.isBlank(propertyName))  {
@@ -100,10 +100,10 @@ public class BeanUtils {
 
     /**
      * 获得复杂属性的参数类型
-     * @param t
-     * @param propertyName
-     * @param <T>
-     * @return
+     * @param t 对象
+     * @param propertyName 属性名
+     * @param <T> 泛型约束
+     * @return 类型
      */
     public static <T> Class<?> getPropertyType(T t, String propertyName) {
         if(t == null || StringUtils.isBlank(propertyName))  {
@@ -140,12 +140,11 @@ public class BeanUtils {
 
     /**
      * 实体的setter方法
-     * @param t
-     * @param propertyName
-     * @param propertyValue
-     * @param propertyClass
-     * @param <T>
-     * @return
+     * @param t 待修改的对象
+     * @param propertyName 待修改的属性
+     * @param propertyValue 属性值
+     * @param propertyClass 属性类型
+     * @param <T> 泛型约束
      */
     public static <T> void set(T t, String propertyName, Object propertyValue, Class<?> propertyClass) {
         if("".equals(propertyName) || propertyName == null) {

@@ -2,10 +2,8 @@ package com.github.softwarevax.dict.core.domain;
 
 /**
  * @author ctw
- * @Project： plugin-parent
- * @Package: com.github.softwarevax.dict.core
- * @Description: 缓存刷新策略
- * @date 2020/11/21 11:50
+ * 缓存刷新策略
+ * 2020/11/21 11:50
  */
 public class DictionaryConfigure {
 

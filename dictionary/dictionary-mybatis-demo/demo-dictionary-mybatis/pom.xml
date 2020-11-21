@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>com.github.softwarevax</groupId>
 		<artifactId>dictionary-mybatis-demo</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1-RELEASE</version>
 	</parent>
 
 	<groupId>com.github.softwarevax</groupId>
 	<artifactId>demo-dictionary-mybatis</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1-RELEASE</version>
 	<name>demo-dictionary-mybatis</name>
 	<description>demo-dictionary-mybatis</description>
 	<properties>
@@ -60,18 +60,12 @@
 		<dependency>
 			<groupId>com.github.softwarevax</groupId>
 			<artifactId>dictionary-core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1-RELEASE</version>
 		</dependency>
 
 	</dependencies>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
 	</build>
 
 </project>

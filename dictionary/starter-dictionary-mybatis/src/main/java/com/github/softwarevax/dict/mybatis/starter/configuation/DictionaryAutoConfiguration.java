@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 
 /**
  * @author ctw
- * @date 2018/12/6/006 12:46
+ * 2018/12/6/006 12:46
  */
 @ComponentScan(basePackages = {"com.github.softwarevax"})
 @EnableConfigurationProperties(value = {DictionaryConstant.class})

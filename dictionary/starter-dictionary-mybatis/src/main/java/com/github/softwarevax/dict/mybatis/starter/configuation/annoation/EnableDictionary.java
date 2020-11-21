@@ -8,11 +8,8 @@ import java.lang.annotation.*;
 
 /**
  * @author twcao
- * @Title: EnableSupport
- * @ProjectName support-spring-boot-starter
- * @Description: 是否开启EnableSupport
- * @date 2018/12/6/006 12:52
- * @company wit
+ * 是否开启
+ * 2018/12/6/006 12:52
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -25,7 +22,7 @@ public @interface EnableDictionary {
 
     /**
      * 是否注入
-     * @return
+     * @return 是否启用
      */
     @AliasFor("value")
     boolean autowired() default true;

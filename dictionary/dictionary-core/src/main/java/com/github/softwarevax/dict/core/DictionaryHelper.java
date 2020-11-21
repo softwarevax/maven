@@ -66,7 +66,7 @@ public class DictionaryHelper {
 
     /**
      * 设置配置信息
-     * @param configure
+     * @param configure 属性配置
      */
     public static void configure(DictionaryConfigure configure) {
         DictionaryHelper.configure = configure;
@@ -85,7 +85,7 @@ public class DictionaryHelper {
 
     /**
      * 添加缓存来源
-     * @param loader
+     * @param loader 加载器
      */
     public static void addLoader(DictionaryLoader loader) {
         DictionaryHelper.dictLoaders.add(loader);
@@ -93,7 +93,7 @@ public class DictionaryHelper {
 
     /**
      * 加载所有缓存，并组合统一管理, 重新调用刷新所有缓存
-     * @return
+     * @return 组合后的所有缓存
      */
     public static Map<DictionaryTable, List<Map<String, Object>>> reLoad() {
         notify(events, cache, DictionaryEventType.BEFORE_REFRESH);
@@ -172,8 +172,8 @@ public class DictionaryHelper {
 
     /**
      * 如果tableName不为空，则取表tableName对应的缓存，否则取全部缓存
-     * @param tableName
-     * @return
+     * @param tableName 表名
+     * @return 表缓存
      */
     private static List<Map<String, Object>> getTableCache(String tableName) {
         List<Map<String, Object>> tableCache = new ArrayList<>();

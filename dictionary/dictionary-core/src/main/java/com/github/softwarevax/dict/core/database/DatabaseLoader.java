@@ -51,8 +51,8 @@ public class DatabaseLoader implements DictionaryLoader {
 
     /**
      * 新增字典表
-     * @param dictTable
-     * @return
+     * @param dictTable 数据库表
+     * @return 是否加载成功
      */
     @Override
     public boolean addDictionaryTable(DictionaryTable dictTable) {
@@ -108,8 +108,8 @@ public class DatabaseLoader implements DictionaryLoader {
 
     /**
      * 查询缓存
-     * @param table
-     * @return
+     * @param table 数据库表
+     * @return 加载成功后的缓存
      */
     private List<Map<String, Object>> queryCache(DatabaseTable table) {
         if(table == null) {
@@ -144,8 +144,8 @@ public class DatabaseLoader implements DictionaryLoader {
 
     /**
      * 执行sql
-     * @param sql
-     * @return
+     * @param sql 待执行的sql
+     * @return 查询的缓存
      */
     private List<Map<String, Object>> executeSql(String sql) {
         if(this.dataSource == null) {

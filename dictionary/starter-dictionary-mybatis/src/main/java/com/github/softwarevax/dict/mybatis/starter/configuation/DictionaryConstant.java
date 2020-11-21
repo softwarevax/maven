@@ -4,9 +4,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author twcao
- * @ProjectName Dictionary
- * @Description: Dictionary常量设置
- * @date 2018/10/22 0022 18:32
+ * Dictionary常量设置
+ * 2018/10/22 0022 18:32
  */
 @ConfigurationProperties(prefix = "dictionary")
 public class DictionaryConstant {
