@@ -8,7 +8,7 @@ package com.github.softwarevax.dict.core.domain;
 public class DictionaryConfigure {
 
     /**
-     * refresh period
+     * refresh period, 单位s, 最快5s刷新一次
      */
     private long refreshInterval = 3600 * 1000;
 
@@ -21,8 +21,11 @@ public class DictionaryConfigure {
         return refreshInterval;
     }
 
-    public void setRefreshInterval(long refreshInterval) {
-        this.refreshInterval = refreshInterval;
+    public void setRefreshInterval(int refreshInterval) {
+        if(refreshInterval <= 5) {
+            return;
+        }
+        this.refreshInterval = refreshInterval * 1000;
     }
 
     public boolean isRefreshEveryTime() {

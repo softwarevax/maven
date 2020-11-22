@@ -2,8 +2,12 @@ package com.github.softwarevax.dict.core.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by twcao
@@ -158,5 +162,20 @@ public class BeanUtils {
         }catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 判断是不是简单类型
+     * @param clazz
+     * @return
+     */
+    public static boolean isSimpleType(Class<?> clazz) {
+        return (ClassUtils.isPrimitiveOrWrapper(clazz) ||
+                Enum.class.isAssignableFrom(clazz) ||
+                CharSequence.class.isAssignableFrom(clazz) ||
+                Number.class.isAssignableFrom(clazz) ||
+                Date.class.isAssignableFrom(clazz) ||
+                URI.class == clazz || URL.class == clazz ||
+                Locale.class == clazz || Class.class == clazz);
     }
 }

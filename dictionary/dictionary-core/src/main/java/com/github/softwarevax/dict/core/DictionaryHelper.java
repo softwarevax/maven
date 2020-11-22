@@ -2,23 +2,22 @@ package com.github.softwarevax.dict.core;
 
 
 import com.github.softwarevax.dict.core.domain.DictionaryConfigure;
-import com.github.softwarevax.dict.core.domain.DictionaryEntity;
+import com.github.softwarevax.dict.core.event.AfterRefreshEvent;
 import com.github.softwarevax.dict.core.event.DictionaryEvent;
 import com.github.softwarevax.dict.core.event.DictionaryEventType;
 import com.github.softwarevax.dict.core.interfaces.DictionaryLoader;
 import com.github.softwarevax.dict.core.interfaces.DictionaryTable;
-import com.github.softwarevax.dict.core.utils.BeanUtils;
-import com.github.softwarevax.dict.core.utils.DictionaryUtils;
 import com.github.softwarevax.dict.core.utils.ListUtils;
-import com.github.softwarevax.dict.core.utils.StringUtils;
 
-import java.lang.reflect.Field;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * 字典表插件管理, 统一处理, 多种字典缓存组合
  */
 public class DictionaryHelper {
+
+    public static final Logger logger = Logger.getLogger(DictionaryHelper.class.getName());
 
     /**
      * key列名
@@ -31,29 +30,29 @@ public class DictionaryHelper {
     public static final String VALUE_COLUMN = "value";
 
     /**
-     * 存放所有的缓存
-     */
-    private static Map<DictionaryTable, List<Map<String, Object>>> cache = new HashMap<>();
-
-    /**
      * 缓存来源, database, redis等
      */
     private static List<DictionaryLoader> dictLoaders = new ArrayList<>();
 
     /**
-     * 字典缓存配置
+     * 字典配置
      */
     private static DictionaryConfigure configure = new DictionaryConfigure();
 
     /**
-     * 事件
+     * 通知事件
      */
     private static List<DictionaryEvent> events = new ArrayList<>();
 
     /**
+     * 缓存
+     */
+    private static CacheHolder cacheHolder = new CacheHolder();
+
+    /**
      * 刷新缓存的定时器
      */
-    private static Timer timer = new Timer();
+    private static Timer timer = new Timer("dict-refresh");
 
     static {
         timer.schedule(new TimerTask() {
@@ -62,6 +61,7 @@ public class DictionaryHelper {
                 reLoad();
             }
         }, 0, configure.getRefreshInterval());
+        events.add((AfterRefreshEvent) obj -> logger.info("dictionary reload finished"));
     }
 
     /**
@@ -95,98 +95,24 @@ public class DictionaryHelper {
      * 加载所有缓存，并组合统一管理, 重新调用刷新所有缓存
      * @return 组合后的所有缓存
      */
-    public static Map<DictionaryTable, List<Map<String, Object>>> reLoad() {
-        notify(events, cache, DictionaryEventType.BEFORE_REFRESH);
+    public static void reLoad() {
+        notify(events, cacheHolder.cache, DictionaryEventType.BEFORE_REFRESH);
+        cacheHolder.clear();
         for(DictionaryLoader loader : dictLoaders) {
-            Map<DictionaryTable, List<Map<String, Object>>> loaderCache = loader.dictLoader();
-            cache.putAll(loaderCache);
+            Map<DictionaryTable, List<Map<String, Object>>> loaderCache = loader.reload();
+            cacheHolder.putAll(loaderCache);
         }
-        notify(events, cache, DictionaryEventType.AFTER_REFRESH);
-        return cache;
+        notify(events, cacheHolder.cache, DictionaryEventType.AFTER_REFRESH);
     }
 
     public static void resultWrapper(List<Object> result) {
-        if(ListUtils.isEmpty(result)) {
-            return;
-        }
-        if(DictionaryHelper.cache.size() == 0 || configure.isRefreshEveryTime()) {
+        if(cacheHolder.size() == 0 || configure.isRefreshEveryTime()) {
             // 加载缓存
             reLoad();
         }
-        handleDictionary(result);
-    }
-
-    private static void handleDictionary(List<Object> result) {
-        notify(events, cache, DictionaryEventType.BEFORE_INVOKE);
-        Map<Field, DictionaryEntity> markedFieldMap = DictionaryUtils.getMarkedField(result.get(0));
-        Collection<Field> markedField = markedFieldMap.keySet();
-        for(Object obj : result) {
-            for(Field field : markedField) {
-                // 获取字段注解的信息
-                DictionaryEntity entity = markedFieldMap.get(field);
-                // 如果没有配置property，则设置当前属性为缓存查询出的结果
-                String propertyName = StringUtils.isBlank(entity.getProperty()) ? field.getName() : entity.getProperty();
-                // 属性值, 字典的key[sex] eg: sex:男  ===> sex
-                Object propertyVal = BeanUtils.get(obj, field.getName());
-                if(propertyVal == null) { // 如果本身没有值，则直接返回
-                    continue;
-                }
-                Map<String, Object> conditions = entity.getCondition();
-                conditions.put((String) entity.getValue(), propertyVal);
-                Object dictVal = queryCache(entity);
-                if(dictVal == null) {
-                    continue;
-                }
-                BeanUtils.set(obj, propertyName, dictVal, field.getType());
-            }
-        }
-        notify(events, cache, DictionaryEventType.AFTER_INVOKE);
-    }
-
-    private static Object queryCache(DictionaryEntity dict) {
-        if(dict == null) {return null;}
-        String tableName = dict.getTable();
-        List<Map<String, Object>> propCache = getTableCache(tableName);
-        Map<String, Object> conditions = dict.getCondition();
-        for(Map<String, Object> cache : propCache) {
-            boolean flag = true;
-            Iterator<Map.Entry<String, Object>> it = conditions.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry<String, Object> entry = it.next();
-                String key = entry.getKey();
-                // 如果查不到缓存，跳过
-                if(!cache.containsKey(key)) {
-                    flag = false;
-                    continue;
-                }
-                if(!cache.get(key).equals(entry.getValue())) {
-                    flag = false;
-                }
-            }
-            if(flag) {
-               return cache.get(dict.getColumn());
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 如果tableName不为空，则取表tableName对应的缓存，否则取全部缓存
-     * @param tableName 表名
-     * @return 表缓存
-     */
-    private static List<Map<String, Object>> getTableCache(String tableName) {
-        List<Map<String, Object>> tableCache = new ArrayList<>();
-        Iterator<Map.Entry<DictionaryTable, List<Map<String, Object>>>> iterator = cache.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<DictionaryTable, List<Map<String, Object>>> entry = iterator.next();
-            if(StringUtils.isNotBlank(tableName) && tableName.equals(entry.getKey().name())) {
-                tableCache.addAll(entry.getValue());
-            } else {
-                tableCache.addAll(entry.getValue());
-            }
-        }
-        return tableCache;
+        notify(events, cacheHolder.cache, DictionaryEventType.BEFORE_INVOKE);
+        cacheHolder.handleData(result);
+        notify(events, cacheHolder.cache, DictionaryEventType.AFTER_INVOKE);
     }
 
     public static void addListener(DictionaryEvent event) {

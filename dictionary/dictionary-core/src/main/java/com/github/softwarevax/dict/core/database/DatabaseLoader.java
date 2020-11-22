@@ -4,6 +4,7 @@ package com.github.softwarevax.dict.core.database;
 import com.github.softwarevax.dict.core.interfaces.DictionaryLoader;
 import com.github.softwarevax.dict.core.interfaces.DictionaryTable;
 import com.github.softwarevax.dict.core.utils.ArrayUtils;
+import com.github.softwarevax.dict.core.utils.CollectionUtils;
 import com.github.softwarevax.dict.core.utils.StringUtils;
 
 import javax.sql.DataSource;
@@ -71,10 +72,12 @@ public class DatabaseLoader implements DictionaryLoader {
             // 没有设置表名，则使用默认表名
             dbTable.setTableName(TABLE_NAME);
         }
+        dbTable.setTableName(tableName.trim()); // 防止表名两边的空串
         if(ArrayUtils.length(dbTable.getColumn()) < 2) {
             // 没有设置列名，则使用默认列名
             dbTable.setColumn(new String[] {KEY_COLUMN, VALUE_COLUMN});
         }
+        dbTable.setColumn(ArrayUtils.trim(dbTable.getColumn())); // 防止列名两边的空串
         List<String> existTable = dbCache.keySet().stream().map(table -> table.name()).collect(Collectors.toList());
         if(existTable.contains(tableName)) {
             // 不重复添加字典表
@@ -107,6 +110,25 @@ public class DatabaseLoader implements DictionaryLoader {
     }
 
     /**
+     * 重新加载缓存
+     */
+    @Override
+    public Map<DictionaryTable, List<Map<String, Object>>> reload() {
+        if(CollectionUtils.isEmpty(this.dbCache)) {
+            return new HashMap<>();
+        }
+        Iterator<DictionaryTable> iterator = this.dbCache.keySet().iterator();
+        while (iterator.hasNext()) {
+            DictionaryTable next = iterator.next();
+            if(!(next instanceof DatabaseTable)) {
+                continue;
+            }
+            this.dbCache.get(next).clear();
+        }
+        return this.dictLoader();
+    }
+
+    /**
      * 查询缓存
      * @param table 数据库表
      * @return 加载成功后的缓存
@@ -126,20 +148,21 @@ public class DatabaseLoader implements DictionaryLoader {
         String[] condition = table.getConditions();
         if(ArrayUtils.isNotEmpty(condition)) {
             for(String con : condition) {
-                if(StringUtils.isBlank(con)) {
+                if(StringUtils.isBlank(con)) { //条件为空不处理
                     continue;
                 }
                 String[] cons = ArrayUtils.trim(con.split("="));
-                if(ArrayUtils.length(cons) != 2) {
+                if(ArrayUtils.length(cons) != 2) { // 根据等号分离，长度!=2不处理
                     continue;
                 }
-                if(ArrayUtils.contains(columns, cons[0])) {
+                if(ArrayUtils.contains(columns, cons[0])) { // 在列中不存在的条件列不处理
                     cons[0] = cons[0].indexOf(wrap) > -1 ? cons[0] : StringUtils.wrap(cons[0], wrap);
                 }
                 sb.append(" AND ").append(cons[0]).append(" = ").append(cons[1]);
             }
         }
-        return executeSql(sb.toString());
+        String sql = sb.toString();
+        return executeSql(sql);
     }
 
     /**

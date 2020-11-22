@@ -225,18 +225,58 @@ private String state;
 ```
 Version 0.0.1.RELEASE Finished at 2020-11-21
 
-Version 0.0.2.RELEASE
+Version 0.0.2.RELEASE Finished at 2020-11-22
 ```
 新增功能:
-1、
-```
-```
-修改功能:
-1、
+1、可以字典嵌套(详见demo-starter-dictionary-mybatis)
+public class Habit {
+
+    private String id;
+
+    private String habitName;
+
+    /**
+     * 对象: 字典嵌套
+     */
+    @Dictionary
+    private User createUser;
+
+    /**
+     * 集合: 字典嵌套
+     */
+    @Dictionary
+    private List<User> createUsers;
+
+    @Dictionary(table ="app_user", column = "name", value = "id", property = "updateUserName")
+    private String updateUserId;
+
+    private String updateUserName;
+
+    @Dictionary
+    private String state;
+}
+
+public class User {
+    private String id;
+
+    private String name;
+
+    /**
+     * 状态
+     */
+    @Dictionary(table = "sys_config", property = "stateLabel", column = "label", value = "value", conditions = {"type = user_state"})
+    private String state;
+
+    private String stateLabel;
+
+    @Dictionary
+    private String sex;
+}
+2、提供刷新字典缓存的接口
+ip:port/dict/refresh
 ```
 
-```
-待完成/完善功能
-1、提供刷新字典缓存的接口，以便在多模块的项目中，修改字典后，可以及时刷新字典
-2、字典嵌套时，也能完成字典项转换
-```
+github tag:
+github 创建Tag: git tag 名字 –m "注释"
+推送到远端: git push origin tag名
+clone 指定的tag: git clone --branch [tag] [git地址]

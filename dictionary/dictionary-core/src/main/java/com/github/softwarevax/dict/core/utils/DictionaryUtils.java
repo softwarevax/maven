@@ -14,33 +14,28 @@ import java.util.Map;
  */
 public class DictionaryUtils {
 
-    public static Map<Field, DictionaryEntity> getMarkedField(Object obj) {
-        if(obj == null) {return new HashMap<>();}
-        Map<Field, DictionaryEntity> map = new HashMap<>();
-        Class<?> clazz = obj.getClass();
-        Field[] fields = clazz.getDeclaredFields();
-        for(Field field : fields) {
-            Dictionary dictionary = field.getAnnotation(Dictionary.class);
-            if(dictionary == null) {
-                continue;
-            }
-            DictionaryEntity dictEntity = new DictionaryEntity();
-            if(StringUtils.isBlank(dictionary.column())) {
-                dictEntity.setColumn(DictionaryHelper.KEY_COLUMN);
-            } else {
-                dictEntity.setColumn(dictionary.column());
-            }
-            if(StringUtils.isBlank(dictionary.value())) {
-                dictEntity.setValue(DictionaryHelper.VALUE_COLUMN);
-            } else {
-                dictEntity.setValue(dictionary.value());
-            }
-            dictEntity.setCondition(handleCondition(dictionary.conditions()));
-            dictEntity.setProperty(dictionary.property());
-            dictEntity.setTable(dictionary.table());
-            map.put(field, dictEntity);
+    /**
+     * 提取字段注解Dictionary的属性值
+     * @param field
+     * @return
+     */
+    public static DictionaryEntity extractDictionaryAnnotation(Field field) {
+        Dictionary dictionary = field.getAnnotation(Dictionary.class);
+        if(dictionary == null) {
+            return null;
         }
-        return map;
+        DictionaryEntity dictEntity = new DictionaryEntity();
+        // column
+        dictEntity.setColumn(StringUtils.isBlank(dictionary.column()) ? DictionaryHelper.KEY_COLUMN : dictionary.column());
+        // value
+        dictEntity.setValue(StringUtils.isBlank(dictionary.value()) ? DictionaryHelper.VALUE_COLUMN : dictionary.value());
+        // conditions
+        dictEntity.setCondition(handleCondition(dictionary.conditions()));
+        // property
+        dictEntity.setProperty(dictionary.property());
+        // table
+        dictEntity.setTable(dictionary.table());
+        return dictEntity;
     }
 
     /**

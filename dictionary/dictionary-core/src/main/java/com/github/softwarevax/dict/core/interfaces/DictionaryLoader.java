@@ -17,4 +17,9 @@ public interface DictionaryLoader {
      * @return 加载后的缓存
      */
     Map<DictionaryTable, List<Map<String, Object>>> dictLoader();
+
+    /**
+     * 重新加载缓存
+     */
+    Map<DictionaryTable, List<Map<String, Object>>> reload();
 }
