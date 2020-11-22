@@ -93,7 +93,6 @@ public class DictionaryHelper {
 
     /**
      * 加载所有缓存，并组合统一管理, 重新调用刷新所有缓存
-     * @return 组合后的所有缓存
      */
     public static void reLoad() {
         notify(events, cacheHolder.cache, DictionaryEventType.BEFORE_REFRESH);

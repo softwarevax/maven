@@ -11,7 +11,7 @@
 
 	<groupId>com.github.softwarevax</groupId>
 	<artifactId>dictionary-core</artifactId>
-	<version>0.0.1-RELEASE</version>
+	<version>0.0.2-RELEASE</version>
 	<name>dictionary-core</name>
 	<description>dictionary plugins dictionary-core</description>
 

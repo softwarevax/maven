@@ -1,8 +1,5 @@
 package com.github.softwarevax.dict.core.utils;
 
-
-import com.sun.istack.internal.Nullable;
-
 import java.beans.Introspector;
 import java.io.Closeable;
 import java.io.Externalizable;
@@ -44,7 +41,6 @@ public class ClassUtils {
 
     }
 
-    @Nullable
     public static ClassLoader getDefaultClassLoader() {
         ClassLoader cl = null;
 
@@ -66,8 +62,7 @@ public class ClassUtils {
         return cl;
     }
 
-    @Nullable
-    public static ClassLoader overrideThreadContextClassLoader(@Nullable ClassLoader classLoaderToUse) {
+    public static ClassLoader overrideThreadContextClassLoader(ClassLoader classLoaderToUse) {
         Thread currentThread = Thread.currentThread();
         ClassLoader threadContextClassLoader = currentThread.getContextClassLoader();
         if (classLoaderToUse != null && !classLoaderToUse.equals(threadContextClassLoader)) {
@@ -78,7 +73,7 @@ public class ClassUtils {
         }
     }
 
-    public static Class<?> forName(String name, @Nullable ClassLoader classLoader) throws ClassNotFoundException, LinkageError {
+    public static Class<?> forName(String name, ClassLoader classLoader) throws ClassNotFoundException, LinkageError {
         Assert.notNull(name, "Name must not be null");
         Class<?> clazz = resolvePrimitiveClassName(name);
         if (clazz == null) {
@@ -127,7 +122,7 @@ public class ClassUtils {
         }
     }
 
-    public static Class<?> resolveClassName(String className, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
+    public static Class<?> resolveClassName(String className, ClassLoader classLoader) throws IllegalArgumentException {
         try {
             return forName(className, classLoader);
         } catch (IllegalAccessError var3) {
@@ -139,7 +134,7 @@ public class ClassUtils {
         }
     }
 
-    public static boolean isPresent(String className, @Nullable ClassLoader classLoader) {
+    public static boolean isPresent(String className, ClassLoader classLoader) {
         try {
             forName(className, classLoader);
             return true;
@@ -150,7 +145,7 @@ public class ClassUtils {
         }
     }
 
-    public static boolean isVisible(Class<?> clazz, @Nullable ClassLoader classLoader) {
+    public static boolean isVisible(Class<?> clazz, ClassLoader classLoader) {
         if (classLoader == null) {
             return true;
         } else {
@@ -165,7 +160,7 @@ public class ClassUtils {
         }
     }
 
-    public static boolean isCacheSafe(Class<?> clazz, @Nullable ClassLoader classLoader) {
+    public static boolean isCacheSafe(Class<?> clazz, ClassLoader classLoader) {
         Assert.notNull(clazz, "Class must not be null");
 
         try {
@@ -207,8 +202,8 @@ public class ClassUtils {
         }
     }
 
-    @Nullable
-    public static Class<?> resolvePrimitiveClassName(@Nullable String name) {
+
+    public static Class<?> resolvePrimitiveClassName(String name) {
         Class<?> result = null;
         if (name != null && name.length() <= 8) {
             result = (Class)primitiveTypeNameMap.get(name);
@@ -265,7 +260,7 @@ public class ClassUtils {
         }
     }
 
-    public static boolean isAssignableValue(Class<?> type, @Nullable Object value) {
+    public static boolean isAssignableValue(Class<?> type, Object value) {
         Assert.notNull(type, "Type must not be null");
         return value != null ? isAssignable(type, value.getClass()) : !type.isPrimitive();
     }
@@ -285,7 +280,7 @@ public class ClassUtils {
         return !resourceName.startsWith("/") ? classPackageAsResourcePath(clazz) + '/' + resourceName : classPackageAsResourcePath(clazz) + resourceName;
     }
 
-    public static String classPackageAsResourcePath(@Nullable Class<?> clazz) {
+    public static String classPackageAsResourcePath(Class<?> clazz) {
         if (clazz == null) {
             return "";
         } else {
@@ -313,7 +308,7 @@ public class ClassUtils {
         return getAllInterfacesForClass(clazz, (ClassLoader)null);
     }
 
-    public static Class<?>[] getAllInterfacesForClass(Class<?> clazz, @Nullable ClassLoader classLoader) {
+    public static Class<?>[] getAllInterfacesForClass(Class<?> clazz, ClassLoader classLoader) {
         return toClassArray(getAllInterfacesForClassAsSet(clazz, classLoader));
     }
 
@@ -326,7 +321,7 @@ public class ClassUtils {
         return getAllInterfacesForClassAsSet(clazz, (ClassLoader)null);
     }
 
-    public static Set<Class<?>> getAllInterfacesForClassAsSet(Class<?> clazz, @Nullable ClassLoader classLoader) {
+    public static Set<Class<?>> getAllInterfacesForClassAsSet(Class<?> clazz, ClassLoader classLoader) {
         Assert.notNull(clazz, "Class must not be null");
         if (clazz.isInterface() && isVisible(clazz, classLoader)) {
             return Collections.singleton(clazz);
@@ -350,13 +345,13 @@ public class ClassUtils {
         }
     }
 
-    public static Class<?> createCompositeInterface(Class<?>[] interfaces, @Nullable ClassLoader classLoader) {
+    public static Class<?> createCompositeInterface(Class<?>[] interfaces, ClassLoader classLoader) {
         Assert.notEmpty(interfaces, "Interface array must not be empty");
         return Proxy.getProxyClass(classLoader, interfaces);
     }
 
-    @Nullable
-    public static Class<?> determineCommonAncestor(@Nullable Class<?> clazz1, @Nullable Class<?> clazz2) {
+
+    public static Class<?> determineCommonAncestor(Class<?> clazz1, Class<?> clazz2) {
         if (clazz1 == null) {
             return clazz2;
         } else if (clazz2 == null) {
@@ -391,11 +386,11 @@ public class ClassUtils {
         return isCglibProxyClass(object.getClass());
     }
 
-    public static boolean isCglibProxyClass(@Nullable Class<?> clazz) {
+    public static boolean isCglibProxyClass(Class<?> clazz) {
         return clazz != null && isCglibProxyClassName(clazz.getName());
     }
 
-    public static boolean isCglibProxyClassName(@Nullable String className) {
+    public static boolean isCglibProxyClassName(String className) {
         return className != null && className.contains("$$");
     }
 
@@ -415,8 +410,8 @@ public class ClassUtils {
         return clazz;
     }
 
-    @Nullable
-    public static String getDescriptiveType(@Nullable Object value) {
+
+    public static String getDescriptiveType(Object value) {
         if (value == null) {
             return null;
         } else {
@@ -440,7 +435,7 @@ public class ClassUtils {
         }
     }
 
-    public static boolean matchesTypeName(Class<?> clazz, @Nullable String typeName) {
+    public static boolean matchesTypeName(Class<?> clazz, String typeName) {
         return typeName != null && (typeName.equals(clazz.getTypeName()) || typeName.equals(clazz.getSimpleName()));
     }
 
@@ -495,7 +490,7 @@ public class ClassUtils {
         return getQualifiedMethodName(method, (Class)null);
     }
 
-    public static String getQualifiedMethodName(Method method, @Nullable Class<?> clazz) {
+    public static String getQualifiedMethodName(Method method, Class<?> clazz) {
         Assert.notNull(method, "Method must not be null");
         return (clazz != null ? clazz : method.getDeclaringClass()).getName() + '.' + method.getName();
     }
@@ -504,7 +499,7 @@ public class ClassUtils {
         return getConstructorIfAvailable(clazz, paramTypes) != null;
     }
 
-    @Nullable
+
     public static <T> Constructor<T> getConstructorIfAvailable(Class<T> clazz, Class<?>... paramTypes) {
         Assert.notNull(clazz, "Class must not be null");
 
@@ -519,7 +514,7 @@ public class ClassUtils {
         return getMethodIfAvailable(clazz, methodName, paramTypes) != null;
     }
 
-    public static Method getMethod(Class<?> clazz, String methodName, @Nullable Class<?>... paramTypes) {
+    public static Method getMethod(Class<?> clazz, String methodName, Class<?>... paramTypes) {
         Assert.notNull(clazz, "Class must not be null");
         Assert.notNull(methodName, "Method name must not be null");
         if (paramTypes != null) {
@@ -551,8 +546,8 @@ public class ClassUtils {
         }
     }
 
-    @Nullable
-    public static Method getMethodIfAvailable(Class<?> clazz, String methodName, @Nullable Class<?>... paramTypes) {
+
+    public static Method getMethodIfAvailable(Class<?> clazz, String methodName, Class<?>... paramTypes) {
         Assert.notNull(clazz, "Class must not be null");
         Assert.notNull(methodName, "Method name must not be null");
         if (paramTypes != null) {
@@ -675,7 +670,7 @@ public class ClassUtils {
         return method.getDeclaringClass().getName().equals("groovy.lang.GroovyObject");
     }
 
-    private static boolean isOverridable(Method method, @Nullable Class<?> targetClass) {
+    private static boolean isOverridable(Method method, Class<?> targetClass) {
         if (Modifier.isPrivate(method.getModifiers())) {
             return false;
         } else if (!Modifier.isPublic(method.getModifiers()) && !Modifier.isProtected(method.getModifiers())) {
@@ -685,7 +680,7 @@ public class ClassUtils {
         }
     }
 
-    @Nullable
+
     public static Method getStaticMethod(Class<?> clazz, String methodName, Class<?>... args) {
         Assert.notNull(clazz, "Class must not be null");
         Assert.notNull(methodName, "Method name must not be null");

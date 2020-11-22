@@ -4,10 +4,7 @@ import java.lang.reflect.Field;
 
 /**
  * @author ctw
- * @Project： plugin-parent
- * @Package: com.github.softwarevax.dict.core.enums
- * @Description:
- * @date 2020/11/22 15:10
+ * 020/11/22 15:10
  */
 public class DictField {
 

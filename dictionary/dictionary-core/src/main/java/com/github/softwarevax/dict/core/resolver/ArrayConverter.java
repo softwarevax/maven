@@ -9,10 +9,7 @@ import java.util.List;
 
 /**
  * @author ctw
- * @Project： plugin-parent
- * @Package: com.github.softwarevax.dict.core.resolver
- * @Description:
- * @date 2020/11/22 16:59
+ * 2020/11/22 16:59
  */
 public class ArrayConverter implements IConverter {
 

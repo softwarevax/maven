@@ -20,6 +20,7 @@ public interface DictionaryLoader {
 
     /**
      * 重新加载缓存
+     * @return 加载后的缓存
      */
     Map<DictionaryTable, List<Map<String, Object>>> reload();
 }

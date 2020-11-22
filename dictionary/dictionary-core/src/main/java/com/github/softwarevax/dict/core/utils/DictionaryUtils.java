@@ -16,8 +16,8 @@ public class DictionaryUtils {
 
     /**
      * 提取字段注解Dictionary的属性值
-     * @param field
-     * @return
+     * @param field 属性
+     * @return 属性上注解的相关值
      */
     public static DictionaryEntity extractDictionaryAnnotation(Field field) {
         Dictionary dictionary = field.getAnnotation(Dictionary.class);

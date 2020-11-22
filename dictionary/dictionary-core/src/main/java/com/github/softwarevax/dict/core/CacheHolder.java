@@ -74,7 +74,7 @@ public class CacheHolder {
 
     /**
      * 处理数据
-     * @param result
+     * @param result 待处理的数据
      */
     public void handleData(List<Object> result) {
         if(ListUtils.isEmpty(result)) {

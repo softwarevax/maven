@@ -166,8 +166,8 @@ public class BeanUtils {
 
     /**
      * 判断是不是简单类型
-     * @param clazz
-     * @return
+     * @param clazz class
+     * @return 是否是简单类型
      */
     public static boolean isSimpleType(Class<?> clazz) {
         return (ClassUtils.isPrimitiveOrWrapper(clazz) ||
