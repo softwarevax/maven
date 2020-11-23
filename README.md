@@ -1,24 +1,25 @@
-## 数据字典插件
-github地址:https://github.com/softwarevax/maven.git
+## 数据字典插件(当前版本0.0.2.RELEASE)
+[github地址](https://github.com/softwarevax/maven.git)
 
 maven依赖(已提交到中央仓库):
 ```
 <dependency>
   <groupId>com.github.softwarevax</groupId>
   <artifactId>dictionary-core</artifactId>
-  <version>0.0.1-RELEASE</version>
+  <version>0.0.2.RELEASE</version>
 </dependency>
 <dependency>
   <groupId>com.github.softwarevax</groupId>
   <artifactId>starter-dictionary-mybatis</artifactId>
-  <version>0.0.1-RELEASE</version>
+  <version>0.0.2.RELEASE</version>
 </dependency>
 ```
 ### 1、插件功能描述:
 ```
 1、当表中含有的字典项较多时，需要进行多次连字典表进行查询，从而影响查询和开发速度。此插件的目的在于改善此过程
-2、使用注解，将字典项中的编码替换为文本，如表中返回的字典编码"MAN",需要连接字典表，将“MAN”查出“男”。使用此插件，一个注解解决问题
+2、使用注解，将字典项中的编码替换为文本，如表中返回的字典编码"MAN",需要连接字典表，将"MAN"查出"男"。使用此插件，一个注解可以解决问题
 3、当字典表数据较多时，不建议使用，如用户表，不适合全部加载到内存中
+4、字典支持嵌套，包括对象嵌套，集合嵌套，数组嵌套
 ```
 #### 1.1、插件注解说明
 ```
@@ -36,11 +37,11 @@ public @interface Dictionary {
 ```
 ##### 1.1.2、table
 ```
-此字典项所在的表名，若为空，则从所有的缓存中查找，若找不到，则不替换。若有多个，找到第一个替换(有加载的顺序决定)
+此字典项所在的表名，若为空，则从所有的缓存中查找，若找不到，则不替换。若有多个，找到第一个替换(由加载的顺序决定)
 ```
 ##### 1.1.3、property
 ```
-要进行替换的属性，如性别sex=MAN属性，若为空，则替换当前属性，替换后sex=男，有时需要保留编码，则可以将文本放到另外一个新增的字段中，
+要进行替换的属性，如性别sex=MAN属性，若为空，则替换当前属性，替换后sex=男。有时需要保留编码，则可以将文本放到另外一个自定义的字段中，
 如property=sexLabel,替换后sex=MAN,sexLabel=男,若sexLabel属性是实体中不存在的属性，则替换失败
 ```
 ##### 1.1.4、column、value
@@ -52,7 +53,7 @@ public @interface Dictionary {
 条件，即字典项的唯一性，有时需要很多字段才可以确定，如一个字典表存放多个项目模块的，此时需要加上模块名，才能确定唯一的字典项。
 用户状态: ON===>在线 (type=user_status)
 好友状态: ON===>在线 (type=friend_status)
-此时没有办法区分，一般会多一个字段来确定字典项的唯一性，此时可以设置condition={"type = user_status"},可以有多个条件，多个条件and组合
+此时没有办法区分，需要多一个字段来确定字典项的唯一性，此时可以设置conditions={"type = user_status"}, conditions为数组，支持有多个条件
 ```
 ### 2、集成字典
 #### 2.1、普通java项目集成字典插件
@@ -61,7 +62,7 @@ public @interface Dictionary {
 <dependency>
   <groupId>com.github.softwarevax</groupId>
   <artifactId>dictionary-core</artifactId>
-  <version>0.0.1-RELEASE</version>
+  <version>0.0.2.RELEASE</version>
 </dependency>
 ```
 ##### 2.1.2、配置字典表
@@ -69,7 +70,7 @@ public @interface Dictionary {
 DatabaseTable config = new DatabaseTable();
 String configTableName = "sys_config"; //配置表名
 String[] configColumn = new String[]{"label", "value", "type"}; //配置表中的列
-String[] configCondition = new String[]{"1 = 1"}; //筛选字典的条件
+String[] configCondition = new String[]{"1 = 1"}; //筛选字典需要的条件
 config.setColumn(configColumn);
 config.setConditions(configCondition);
 config.setTableName(configTableName);
@@ -119,7 +120,7 @@ public DictionaryInterceptor dictionaryInterceptor(DataSource dataSource) {
 <dependency>
   <groupId>com.github.softwarevax</groupId>
   <artifactId>starter-dictionary-mybatis</artifactId>
-  <version>0.0.1-RELEASE</version>
+  <version>0.0.2.RELEASE</version>
 </dependency>
 ```
 ##### 2.2.2、配置文件配置字典表
@@ -136,7 +137,7 @@ dictionary.db-table[1].column[0]=id
 dictionary.db-table[1].column[1]=name
 
 # 5秒刷新一次缓存，默认1小时
-dictionary.configure.refresh-interval=5000
+dictionary.configure.refresh-interval=5
 ```
 ### 3、字典插件使用
 #### 3.1、注解标记属性
@@ -228,7 +229,7 @@ Version 0.0.1.RELEASE Finished at 2020-11-21
 Version 0.0.2.RELEASE Finished at 2020-11-22
 ```
 新增功能:
-1、可以字典嵌套(详见demo-starter-dictionary-mybatis)
+1、字典可以嵌套(详见demo-starter-dictionary-mybatis)
 public class Habit {
 
     private String id;
