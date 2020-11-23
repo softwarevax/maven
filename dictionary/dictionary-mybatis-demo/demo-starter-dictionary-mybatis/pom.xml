@@ -60,7 +60,7 @@
 		<dependency>
 			<groupId>com.github.softwarevax</groupId>
 			<artifactId>starter-dictionary-mybatis</artifactId>
-			<version>0.0.1-RELEASE</version>
+			<version>0.0.2.RELEASE</version>
 		</dependency>
 	</dependencies>
 
