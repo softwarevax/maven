@@ -21,7 +21,7 @@ public class DictionaryConfigure {
         return refreshInterval;
     }
 
-    public void setRefreshInterval(int refreshInterval) {
+    public void setRefreshInterval(long refreshInterval) {
         if(refreshInterval <= 5) {
             return;
         }
