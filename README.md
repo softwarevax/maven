@@ -1,7 +1,10 @@
 ## 数据字典插件(当前版本0.0.2.RELEASE)
 [github地址](https://github.com/softwarevax/maven.git)
+>版本列表(已提交到中央仓库)
+* 0.0.1-RELEASE
+* 0.0.2.RELEASE
 
-maven依赖(已提交到中央仓库):
+maven依赖:
 ```
 <dependency>
   <groupId>com.github.softwarevax</groupId>
