@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.softwarevax.dict.starter.mybatis.dao.HabitDao">
+
+    <resultMap type="com.github.softwarevax.dict.starter.mybatis.domain.Habit" id="AppHabitMap">
+        <result property="id" column="habitId" jdbcType="VARCHAR"/>
+        <result property="habitName" column="habit_name" jdbcType="VARCHAR"/>
+        <result property="updateUserId" column="update_user_id" jdbcType="VARCHAR"/>
+        <result property="state" column="habitState" jdbcType="VARCHAR"/>
+        <association property="createUser" javaType="com.github.softwarevax.dict.starter.mybatis.domain.User">
+            <id property="id" column="userId" />
+            <result property="name" column="name"/>
+            <result property="state" column="userState"/>
+            <result property="sex" column="userSex"/>
+        </association>
+        <collection property="createUsers" ofType="com.github.softwarevax.dict.starter.mybatis.domain.User">
+            <id property="id" column="userId" />
+            <result property="name" column="name"/>
+            <result property="state" column="userState"/>
+            <result property="sex" column="userSex"/>
+        </collection>
+    </resultMap>
+
+    <select id="queryList" resultMap="AppHabitMap">
+        select ah.id as habitId, ah.habit_name, ah.update_user_id, ah.state as habitState, u.id as userId, u.name, u.state as userState, u.sex as userSex from app_habit ah left join app_user u on ah.create_user_id = u.id
+    </select>
+
+
+
+</mapper>

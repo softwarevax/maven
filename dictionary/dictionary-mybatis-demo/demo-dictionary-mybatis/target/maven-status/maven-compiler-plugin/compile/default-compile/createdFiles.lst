@@ -1,0 +1,5 @@
+com\github\softwarevax\dict\mybatis\domain\Habit.class
+com\github\softwarevax\dict\mybatis\MybatisDictionaryApplication.class
+com\github\softwarevax\dict\mybatis\configure\BeanRegistry.class
+com\github\softwarevax\dict\mybatis\dao\HabitDao.class
+com\github\softwarevax\dict\mybatis\controller\HabitController.class

@@ -1,0 +1,8 @@
+com\github\softwarevax\dict\mybatis\starter\configuation\annoation\EnableDictionary.class
+com\github\softwarevax\dict\mybatis\starter\web\DictionaryController.class
+com\github\softwarevax\dict\mybatis\starter\configuation\DictionaryConstant$DictionaryConfigure.class
+com\github\softwarevax\dict\mybatis\starter\configuation\selector\EnableDictionaryImportSelector.class
+META-INF\spring-configuration-metadata.json
+com\github\softwarevax\dict\mybatis\starter\configuation\DictionaryAutoConfiguration.class
+com\github\softwarevax\dict\mybatis\starter\configuation\DictionaryConstant$DatabaseTable.class
+com\github\softwarevax\dict\mybatis\starter\configuation\DictionaryConstant.class
