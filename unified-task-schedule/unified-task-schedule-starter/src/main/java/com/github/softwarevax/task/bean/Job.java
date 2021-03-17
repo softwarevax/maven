@@ -37,6 +37,10 @@ public class Job {
     private boolean enable = true;
 
     /**
+     * 是否处于等待执行下个任务的状态
+     */
+    private boolean active;
+    /**
      * 任务运行类
      */
     private Class<? extends Runnable> clazz;
@@ -94,6 +98,17 @@ public class Job {
 
     public void setEnable(boolean enable) {
         this.enable = enable;
+        if(!enable) {
+            this.setActive(false);
+        }
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override

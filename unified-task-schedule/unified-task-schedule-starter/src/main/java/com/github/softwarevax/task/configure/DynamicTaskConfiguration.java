@@ -11,6 +11,4 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @ComponentScan(basePackages = {"com.github.softwarevax.task"})
 public class DynamicTaskConfiguration {
-
-
 }
