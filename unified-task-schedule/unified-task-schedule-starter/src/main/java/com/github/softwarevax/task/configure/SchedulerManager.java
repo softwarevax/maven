@@ -65,6 +65,7 @@ public class SchedulerManager {
         job.setActive(true);
         JobHandler entity = new JobHandler();
         TriggerTask triggerTask = new TriggerTask(runnable, (TriggerContext triggerContext) -> {
+            // 每次任务执行均会进入此方法
             CronTrigger trigger = new CronTrigger(job.getCron());
             entity.setTriggerContext(triggerContext);
             return job.isEnable() ? trigger.nextExecutionTime(triggerContext) : null;
@@ -140,7 +141,7 @@ public class SchedulerManager {
      * @param jobId 任务id
      * @return 是否成功启动
      */
-    public boolean start(String jobId) {
+    public boolean startUp(String jobId) {
         try {
             JobHandler handler = this.getJobHandler(jobId);
             Assert.notNull(handler, "任务[" + jobId + "]不存在");

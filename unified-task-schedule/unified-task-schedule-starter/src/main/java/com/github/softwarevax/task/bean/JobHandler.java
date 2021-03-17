@@ -6,7 +6,7 @@ import org.springframework.scheduling.config.TriggerTask;
 
 /**
  * @author twcao
- * @description 任务属性
+ * @description 任务操作
  * @project unified-task-schedule
  * @classname JobEntity
  * @date 2021/3/16 13:27
