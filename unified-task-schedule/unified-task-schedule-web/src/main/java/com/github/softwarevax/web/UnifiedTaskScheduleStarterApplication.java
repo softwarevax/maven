@@ -11,8 +11,8 @@ public class UnifiedTaskScheduleStarterApplication {
 
 	public static void main(String[] args) throws Exception {
 		ConfigurableApplicationContext ctx = SpringApplication.run(UnifiedTaskScheduleStarterApplication.class, args);
-		SchedulerManager ma = ctx.getBean(SchedulerManager.class);
-		Job job = ma.addJob(com.github.softwarevax.web.HelloJob.class);
-		ma.shutDown(job.getJobId());
+		SchedulerManager schedulerManager = ctx.getBean(SchedulerManager.class);
+		Job job = schedulerManager.addJob(com.github.softwarevax.web.HelloJob.class);
+		schedulerManager.shutDown(job.getJobId());
 	}
 }
