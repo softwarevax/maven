@@ -55,6 +55,12 @@ public class ApplicationContextUtils implements ApplicationContextAware {
         return CONTEXT.getBean(name);
     }
 
+    /**
+     * springboot动态注册bean
+     * @param clazz
+     * @param <T>
+     * @return
+     */
     public static <T> T register(Class<T> clazz) {
 		ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) ApplicationContextUtils.getApplicationContext();
 		DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) configurableApplicationContext.getBeanFactory();
