@@ -1,6 +1,9 @@
 package com.github.softwarevax.task.configure;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Primary;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 /**
  * @author twcao
@@ -11,4 +14,17 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @ComponentScan(basePackages = {"com.github.softwarevax.task"})
 public class DynamicTaskConfiguration {
+
+    /**
+     * 任务调度器
+     * @return
+     */
+    @Bean
+    @Primary
+    public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
+        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+        // 设置线程前缀
+        scheduler.setThreadNamePrefix("unified-schedule-task-");
+        return scheduler;
+    }
 }

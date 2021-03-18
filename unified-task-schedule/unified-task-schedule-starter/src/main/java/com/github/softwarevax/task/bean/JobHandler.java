@@ -1,6 +1,7 @@
 package com.github.softwarevax.task.bean;
 
 import org.springframework.scheduling.TriggerContext;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTask;
 import org.springframework.scheduling.config.TriggerTask;
 
@@ -13,11 +14,33 @@ import org.springframework.scheduling.config.TriggerTask;
  */
 public class JobHandler {
 
+    /**
+     * 任务调度器
+     */
+    ThreadPoolTaskScheduler scheduler;
+
+    /**
+     * 待调度的任务
+     */
     private ScheduledTask scheduledTask;
 
+    /**
+     * 触发任务
+     */
     private TriggerTask triggerTask;
 
+    /**
+     * 上下文
+     */
     private TriggerContext triggerContext;
+
+    public ThreadPoolTaskScheduler getScheduler() {
+        return scheduler;
+    }
+
+    public void setScheduler(ThreadPoolTaskScheduler scheduler) {
+        this.scheduler = scheduler;
+    }
 
     public ScheduledTask getScheduledTask() {
         return scheduledTask;

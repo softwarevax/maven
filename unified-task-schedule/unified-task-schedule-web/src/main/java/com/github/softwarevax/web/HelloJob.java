@@ -13,7 +13,12 @@ import com.github.softwarevax.task.CronExpress;
 public class HelloJob implements Runnable {
 
     @Override
-    public void run() {
+    public void run(){
         System.out.println("hello msg" + Thread.currentThread().getId());
+        try {
+            Thread.sleep(2000);
+        } catch (Exception e) {
+
+        }
     }
 }

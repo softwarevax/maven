@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.scheduling.TriggerContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTask;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.config.TriggerTask;
@@ -41,6 +42,12 @@ public class SchedulerManager {
     private JobSchedulingConfigurer register;
 
     /**
+     * 任务调度器
+     */
+    @Autowired
+    ThreadPoolTaskScheduler scheduler;
+
+    /**
      * 新增任务, 自生效
      * @param job 任务实体
      * @return 返回新增的任务
@@ -48,6 +55,7 @@ public class SchedulerManager {
     public Job addJob(Job job) {
         Assert.notNull(job, "job can't be null");
         ScheduledTaskRegistrar registrar = register.getRegistrar();
+        registrar.setScheduler(scheduler);
         Runnable runnable = ApplicationContextUtils.register(job.getClazz());
         if(job.getJobId() == null || "".equals(job.getJobId())) {
             job.setJobId(job.getClazz().getName());
@@ -73,6 +81,7 @@ public class SchedulerManager {
         ScheduledTask scheduledTask = registrar.scheduleTriggerTask(triggerTask);
         entity.setScheduledTask(scheduledTask);
         entity.setTriggerTask(triggerTask);
+        entity.setScheduler(scheduler);
         tasks.put(job, entity);
         return job;
     }
