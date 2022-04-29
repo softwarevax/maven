@@ -1,6 +1,9 @@
 deploy发布到远程仓库:
+
 半小时到https://repo1.maven.org/maven2/
+
 4个小时到https://search.maven.org
+
 一天到https://mvnrepository.com
 ## 数据字典插件(当前版本0.0.2.RELEASE)
 [github地址](https://github.com/softwarevax/maven.git)
