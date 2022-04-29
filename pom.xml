@@ -23,6 +23,7 @@
 	<modules>
 		<module>dictionary</module>
 		<module>unified-task-schedule</module>
+		<module>distributed-lock</module>
 	</modules>
 
 	<dependencies>
