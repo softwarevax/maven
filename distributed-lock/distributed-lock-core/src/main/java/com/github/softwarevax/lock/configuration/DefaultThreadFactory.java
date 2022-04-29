@@ -3,12 +3,6 @@ package com.github.softwarevax.lock.configuration;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * @author twcao
- * @description 线程工厂
- * @classname DefaultThreadFactory
- * @date 2020/11/10 15:21
- */
 public class DefaultThreadFactory implements ThreadFactory {
 
     private static final AtomicInteger poolNumber = new AtomicInteger(1);

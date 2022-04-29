@@ -14,13 +14,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author twcao
- * @title: AbstractDatabaseLockServiceImpl
- * @projectName plugin-parent
- * @description: 数据库（mysql和oracle）
- * @date 2022/4/2911:56
- */
 public class DatabaseLockServiceImpl implements LockService {
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseLockServiceImpl.class);
@@ -66,11 +59,6 @@ public class DatabaseLockServiceImpl implements LockService {
         }).start();
     }
 
-    /**
-     * 获取锁
-     * @param lockKey 锁的key
-     * @param timeOut 超时时间
-     */
     @Override
     public boolean lock(String lockKey, long timeOut) {
         Assert.hasText(lockKey, "lockKey不能为空");
@@ -104,10 +92,6 @@ public class DatabaseLockServiceImpl implements LockService {
         }
     }
 
-    /**
-     * 解锁失败
-     * @param lockKey
-     */
     @Override
     public boolean unLock(String lockKey) {
         Assert.hasText(lockKey, "lockKey 不能为空");

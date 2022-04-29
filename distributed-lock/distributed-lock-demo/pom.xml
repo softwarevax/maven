@@ -5,11 +5,11 @@
 	<parent>
 		<groupId>com.github.softwarevax</groupId>
 		<artifactId>distributed-lock</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1.RELEASE</version>
 	</parent>
 	<groupId>com.github.softwarevax</groupId>
 	<artifactId>distributed-lock-demo</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1.RELEASE</version>
 	<name>distributed-lock-demo</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>

@@ -2,13 +2,6 @@ package com.github.softwarevax.lock.aspect;
 
 import java.util.Objects;
 
-/**
- * @author twcao
- * @title: Item
- * @projectName plugin-parent
- * @description: lock_key
- * @date 2022/4/2913:14
- */
 public class Item {
 
     private String lockKey;

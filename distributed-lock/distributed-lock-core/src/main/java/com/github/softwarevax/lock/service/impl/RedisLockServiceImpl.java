@@ -8,13 +8,6 @@ import org.springframework.util.Assert;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author twcao
- * @title: LockServiceImpl
- * @projectName plugin-parent
- * @description: redis锁接口实现
- * @date 2022/4/299:51
- */
 public class RedisLockServiceImpl implements LockService {
 
     private RedisTemplate template;
@@ -28,11 +21,6 @@ public class RedisLockServiceImpl implements LockService {
         this.constant = constant;
     }
 
-    /**
-     * 获取锁
-     * @param lockKey 锁的key
-     * @param timeOut 超时时间
-     */
     @Override
     public boolean lock(String lockKey, long timeOut) {
         Assert.hasText(lockKey, "lockKey不能为空");
@@ -54,10 +42,6 @@ public class RedisLockServiceImpl implements LockService {
         }
     }
 
-    /**
-     * 解锁失败
-     * @param lockKey
-     */
     @Override
     public boolean unLock(String lockKey) {
         Assert.hasText(lockKey, "lockKey 不能为空");

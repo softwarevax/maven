@@ -3,11 +3,6 @@ package com.github.softwarevax.lock.configuration;
 import com.github.softwarevax.lock.configuration.enums.LockEnum;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/**
- * @author twcao
- * lock常量设置
- * 2018/10/22 0022 18:32
- */
 @ConfigurationProperties(prefix = "lock")
 public class LockConstant {
 

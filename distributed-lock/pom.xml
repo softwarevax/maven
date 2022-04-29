@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.github.softwarevax</groupId>
 	<artifactId>distributed-lock</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1.RELEASE</version>
 	<name>distributed-lock</name>
 	<packaging>pom</packaging>
 	<description>Demo project for Spring Boot</description>

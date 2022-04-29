@@ -34,13 +34,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author twcao
- * @title: DistributeLockAspect
- * @projectName plugin-parent
- * @description: 分布式锁切面
- * @date 2022/4/2910:28
- */
 @Aspect
 @Component
 public class DistributeLockAspect implements SmartInitializingSingleton, ApplicationContextAware {
@@ -49,15 +42,9 @@ public class DistributeLockAspect implements SmartInitializingSingleton, Applica
 
     private static final String LOCK_SERVICE_NAME = "lockService";
 
-    /**
-     * 线程池
-     */
     private ThreadPoolExecutor executor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().availableProcessors(),
             5, TimeUnit.MINUTES, new ArrayBlockingQueue<>(1000), new DefaultThreadFactory());
 
-    /**
-     * 存放key
-     */
     private ThreadLocal<String> lockKey = new ThreadLocal<>();
 
     private LockService lockService;
@@ -120,12 +107,6 @@ public class DistributeLockAspect implements SmartInitializingSingleton, Applica
         lockKey.remove();
     }
 
-    /**
-     * 分布式锁的key, 默认由全限定类名 + 具体方法(含参数)
-     * @param key
-     * @param joinPoint
-     * @return
-     */
     private String getLockKey(String key, JoinPoint joinPoint) {
         if(StringUtils.isNotBlank(key)) {
             return key;
