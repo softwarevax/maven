@@ -1,9 +1,0 @@
-com.github.softwarevax.dict.core
-com.github.softwarevax.dict.core.database
-com.github.softwarevax.dict.core.domain
-com.github.softwarevax.dict.core.enums
-com.github.softwarevax.dict.core.event
-com.github.softwarevax.dict.core.interfaces
-com.github.softwarevax.dict.core.mybatis
-com.github.softwarevax.dict.core.resolver
-com.github.softwarevax.dict.core.utils
