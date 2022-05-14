@@ -81,7 +81,7 @@ public class DatabaseLockServiceImpl implements LockService {
                         return true;
                     }
                 } catch (Exception e) {
-                    //logger.error(e.getMessage(), e);
+                    logger.error(e.getMessage(), e);
                 }
                 TimeUnit.MILLISECONDS.sleep(constant.getRetryInterval());
             }

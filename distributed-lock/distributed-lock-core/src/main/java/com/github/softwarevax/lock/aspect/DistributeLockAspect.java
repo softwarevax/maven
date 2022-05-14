@@ -111,6 +111,7 @@ public class DistributeLockAspect implements SmartInitializingSingleton, Applica
         if(StringUtils.isNotBlank(key)) {
             return key;
         }
+        logger.info(key);
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
         String[] names = StringUtils.split(method.toString(), " ");
@@ -132,6 +133,7 @@ public class DistributeLockAspect implements SmartInitializingSingleton, Applica
         ConfigurableApplicationContext ctx = (ConfigurableApplicationContext) applicationContext;
         BeanDefinitionBuilder beanDefinitionBuilder = null;
         LockEnum lockType = constant.getType();
+        Assert.notNull(lockType, "请配置分布式锁类型：lock.type");
         logger.info("分布式锁类型 = {}", lockType.name());
         Class<? extends LockService> clazz = null;
         switch (lockType) {
