@@ -1,1 +1,18 @@
-mvn clean deploy -projects dictionary-core,starter-dictionary-mybatis
+mvn clean deploy -P release -projects dictionary-core,starter-dictionary-mybatis
+解释：发布jar(dictionary-core,starter-dictionary-mybatis)包到中央仓库
+1、安装GPA
+2、maven/conf/settings添加配置
+<server>
+  <id>oss</id>
+  <username>twcao</username>
+  <password>*****</password>
+</server>
+其中password为sonatype的账号，记录在有道云笔记中
+3、执行命令（cmd执行maven命令，不要在idea控制台执行，因为发布时，需要用到GPA）
+mvn clean deploy -P release -projects dictionary-core,starter-dictionary-mybatis
+4、说明
+发布jar包，需要javadoc、source、jar和这三个文件对应的asc(签名文件)
+javadoc配置插件maven-javadoc-plugin
+source配置插件maven-source-plugin
+jar配置插件打包插件
+asc文件由工具GPA生成，有用户名和邮箱生成公钥，然后将公钥发布到服务器
