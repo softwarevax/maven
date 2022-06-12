@@ -7,13 +7,13 @@
         <result property="habitName" column="habit_name" jdbcType="VARCHAR"/>
         <result property="updateUserId" column="update_user_id" jdbcType="VARCHAR"/>
         <result property="state" column="habitState" jdbcType="VARCHAR"/>
-        <association property="createUser" javaType="com.github.softwarevax.dict.starter.mybatis.domain.User">
+        <association property="createUser" javaType="com.github.softwarevax.dict.starter.mybatis.domain.ExtendUser">
             <id property="id" column="userId" />
             <result property="name" column="name"/>
             <result property="state" column="userState"/>
             <result property="sex" column="userSex"/>
         </association>
-        <collection property="createUsers" ofType="com.github.softwarevax.dict.starter.mybatis.domain.User">
+        <collection property="createUsers" ofType="com.github.softwarevax.dict.starter.mybatis.domain.ExtendUser">
             <id property="id" column="userId" />
             <result property="name" column="name"/>
             <result property="state" column="userState"/>

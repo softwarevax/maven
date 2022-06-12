@@ -26,13 +26,13 @@ public class Habit {
      * 对象: 字典嵌套
      */
     @Dictionary
-    private User createUser;
+    private ExtendUser createUser;
 
     /**
      * 集合: 字典嵌套
      */
     @Dictionary
-    private List<User> createUsers;
+    private List<ExtendUser> createUsers;
 
     @Dictionary(table ="app_user", column = "name", value = "id", property = "updateUserName")
     private String updateUserId;

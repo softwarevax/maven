@@ -2,7 +2,6 @@ package com.github.softwarevax.dict.core.utils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
@@ -38,7 +37,7 @@ public class BeanUtils {
                 String fieldName = sourceField.getName();
                 Object fieldValue = getSimplePropertyValue(source, fieldName);
                 if(fieldValue != null) {
-                    set(target, fieldName, fieldValue, sourceField.getType());
+                    set(target, fieldName, fieldValue);
                 }
            }
         } catch (Exception e) {
@@ -61,9 +60,9 @@ public class BeanUtils {
         }
         try{
             Class<?> clzz = t.getClass();
-            String methodName = "get" + propertyName.substring(0, 1).toUpperCase().concat(propertyName.substring(1));
-            Method method = clzz.getDeclaredMethod(methodName);
-            return method.invoke(t);
+            // fixup: 修复无法获取从父类继承的属性值(2022/6/12)
+            Field field = FieldUtils.getField(clzz, propertyName, true);
+            return FieldUtils.readField(field, t, true);
         }catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -148,18 +147,16 @@ public class BeanUtils {
      * @param t 待修改的对象
      * @param propertyName 待修改的属性
      * @param propertyValue 属性值
-     * @param propertyClass 属性类型
      * @param <T> 泛型约束
      */
-    public static <T> void set(T t, String propertyName, Object propertyValue, Class<?> propertyClass) {
+    public static <T> void set(T t, String propertyName, Object propertyValue) {
         if("".equals(propertyName) || propertyName == null) {
             return;
         }
         try{
             Class<?> clzz = t.getClass();
-            String methodName = "set" + propertyName.substring(0, 1).toUpperCase().concat(propertyName.substring(1));
-            Method method = clzz.getDeclaredMethod(methodName, propertyClass);
-            method.invoke(t, propertyValue);
+            Field field = FieldUtils.getField(clzz, propertyName, true);
+            FieldUtils.writeField(field, t, propertyValue, true);
         }catch (Exception e) {
             e.printStackTrace();
         }

@@ -6,6 +6,7 @@ import com.github.softwarevax.dict.core.resolver.ArrayConverter;
 import com.github.softwarevax.dict.core.resolver.CollectionConverter;
 import com.github.softwarevax.dict.core.resolver.IConverter;
 import com.github.softwarevax.dict.core.utils.BeanUtils;
+import com.github.softwarevax.dict.core.utils.FieldUtils;
 import com.github.softwarevax.dict.core.utils.ListUtils;
 
 import java.lang.annotation.Annotation;
@@ -44,7 +45,8 @@ public class CacheResolver {
         List<DictField> dictFields = new ArrayList<>();
         for(Object obj : result) {
             Class<?> clazz = obj.getClass();
-            Field[] fields= clazz.getDeclaredFields();
+            // fixup: 修复无法获取从父类继承来的属性的问题(2022/6/12)
+            Field[] fields= FieldUtils.getAllFields(clazz);
             for(Field field : fields) {
                 if(field.getDeclaredAnnotation(annotation) == null) {
                     continue;

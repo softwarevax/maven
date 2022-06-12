@@ -105,7 +105,8 @@ public class CacheHolder {
             if(dictVal == null) {
                 continue;
             }
-            BeanUtils.set(field.getObj(), propertyName, dictVal, field.getField().getType());
+            // 将对象field.getObj()的属性propertyName设置为dictVal
+            BeanUtils.set(field.getObj(), propertyName, dictVal);
         }
         resolveField.clear();
     }
