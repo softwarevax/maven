@@ -10,18 +10,19 @@ deploy发布到远程仓库:
 >版本列表(已提交到中央仓库)
 * 0.0.1-RELEASE
 * 0.0.2.RELEASE
+* 0.0.3.RELEASE
 
 maven依赖:
 ```
 <dependency>
   <groupId>com.github.softwarevax</groupId>
   <artifactId>dictionary-core</artifactId>
-  <version>0.0.2.RELEASE</version>
+  <version>${lastVersion}</version>
 </dependency>
 <dependency>
   <groupId>com.github.softwarevax</groupId>
   <artifactId>starter-dictionary-mybatis</artifactId>
-  <version>0.0.2.RELEASE</version>
+  <version>${lastVersion}</version>
 </dependency>
 ```
 ### 1、插件功能描述:
@@ -72,7 +73,7 @@ public @interface Dictionary {
 <dependency>
   <groupId>com.github.softwarevax</groupId>
   <artifactId>dictionary-core</artifactId>
-  <version>0.0.2.RELEASE</version>
+  <version>${lastVersion}</version>
 </dependency>
 ```
 ##### 2.1.2、配置字典表
@@ -130,7 +131,7 @@ public DictionaryInterceptor dictionaryInterceptor(DataSource dataSource) {
 <dependency>
   <groupId>com.github.softwarevax</groupId>
   <artifactId>starter-dictionary-mybatis</artifactId>
-  <version>0.0.2.RELEASE</version>
+  <version>${lastVersion}</version>
 </dependency>
 ```
 ##### 2.2.2、配置文件配置字典表
@@ -288,17 +289,17 @@ ip:port/dict/refresh
 ```
 
 Version 0.0.3.RELEASE Finished at 2022-06-12
-```aidl
+```
 issue1:
 1、修复问题：字典的类型和业务字段的类型不一致时，无法适配，如：字典的值为"1",而业务字段的值为1,
 解决方案：默认转为字符串匹配，可实现接口DictionaryValueComparator，自定义实现两值的比较，可通过dictionary.configure.comparator配置实现类
 ```
-```aidl
+```
 issue2:
 2、修复问题：子类继承父类，在父类中添加字典注解不生效
 解决方案：获取从父类继承的属性，设置从父类继承的属性
 ```
-```aidl
+```
 issue3:
 3、修复问题：字典类型是Integer类型，反显后的值是String,那么类型转化失败
 解决方案：目前只实现两个类型的转换，基础类型转字符串和布尔类型
