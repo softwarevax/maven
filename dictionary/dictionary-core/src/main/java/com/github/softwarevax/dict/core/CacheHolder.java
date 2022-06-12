@@ -4,6 +4,7 @@ import com.github.softwarevax.dict.core.domain.DictionaryEntity;
 import com.github.softwarevax.dict.core.enums.DictField;
 import com.github.softwarevax.dict.core.interfaces.DictionaryTable;
 import com.github.softwarevax.dict.core.interfaces.DictionaryValueComparator;
+import com.github.softwarevax.dict.core.interfaces.DictionaryValueParser;
 import com.github.softwarevax.dict.core.utils.*;
 
 import java.util.*;
@@ -39,9 +40,16 @@ public class CacheHolder {
      */
     private DictionaryValueComparator comparator;
 
-    public CacheHolder(Class<? extends DictionaryValueComparator> comparator) {
+    /**
+     * 转换器，将字典中的字段与属性中的字段匹配
+     * 解决问题：典类型是Integer类型，反显后的值是String,那么类型转化失败
+     */
+    private DictionaryValueParser valueParser;
+
+    public CacheHolder(Class<? extends DictionaryValueComparator> comparator, Class<? extends DictionaryValueParser> valueParser) {
         Assert.isTrue(!comparator.isInterface(), "comparator不能是接口");
         this.comparator = BeanUtils.newInstance(comparator);
+        this.valueParser = BeanUtils.newInstance(valueParser);
     }
 
     public void put(DictionaryTable table, List<Map<String, Object>> value) {
@@ -106,7 +114,8 @@ public class CacheHolder {
                 continue;
             }
             // 将对象field.getObj()的属性propertyName设置为dictVal
-            BeanUtils.set(field.getObj(), propertyName, dictVal);
+            Object parserVal = valueParser.parse(dictVal, field.getField().getType());
+            BeanUtils.set(field.getObj(), propertyName, parserVal);
         }
         resolveField.clear();
     }

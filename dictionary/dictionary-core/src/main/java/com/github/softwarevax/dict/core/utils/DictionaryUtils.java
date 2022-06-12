@@ -15,6 +15,27 @@ import java.util.Map;
 public class DictionaryUtils {
 
     /**
+     * conditionArr[0] a = b
+     * conditionArr[1] c = d
+     * @param conditionArr 条件数组
+     * @return 解析后的条件
+     */
+    private static Map<String, Object> handleCondition(String[] conditionArr) {
+        Map<String, Object> conditionMap = new HashMap<>();
+        if(conditionArr == null || conditionArr.length == 0) {
+            return conditionMap;
+        }
+        for(String condition : conditionArr) {
+            String[] subCondition = condition.split("=");
+            if(subCondition.length != 2) {
+                continue;
+            }
+            conditionMap.put(subCondition[0].trim(), subCondition[1].trim());
+        }
+        return conditionMap;
+    }
+
+    /**
      * 提取字段注解Dictionary的属性值
      * @param field 属性
      * @return 属性上注解的相关值
@@ -36,26 +57,5 @@ public class DictionaryUtils {
         // table
         dictEntity.setTable(dictionary.table());
         return dictEntity;
-    }
-
-    /**
-     * conditionArr[0] a = b
-     * conditionArr[1] c = d
-     * @param conditionArr 条件数组
-     * @return 解析后的条件
-     */
-    private static Map<String, Object> handleCondition(String[] conditionArr) {
-        Map<String, Object> conditionMap = new HashMap<>();
-        if(conditionArr == null || conditionArr.length == 0) {
-            return conditionMap;
-        }
-        for(String condition : conditionArr) {
-            String[] subCondition = condition.split("=");
-            if(subCondition.length != 2) {
-                continue;
-            }
-            conditionMap.put(subCondition[0].trim(), subCondition[1].trim());
-        }
-        return conditionMap;
     }
 }

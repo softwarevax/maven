@@ -1,6 +1,8 @@
 package com.github.softwarevax.dict.core.domain;
 
 import com.github.softwarevax.dict.core.interfaces.DictionaryValueComparator;
+import com.github.softwarevax.dict.core.interfaces.DictionaryValueParser;
+import com.github.softwarevax.dict.core.resolver.DefaultDictionaryValueParser;
 import com.github.softwarevax.dict.core.resolver.DefaultValueComparator;
 
 /**
@@ -25,6 +27,11 @@ public class DictionaryConfigure {
      * default compare : DefaultValueCompare.class
      */
     private Class<? extends DictionaryValueComparator> comparator = DefaultValueComparator.class;
+
+    /**
+     * The result converter matches the data retrieved from the dictionary with the property to be set
+     */
+    private Class<? extends DictionaryValueParser> valueParser = DefaultDictionaryValueParser.class;
 
     public long getRefreshInterval() {
         return refreshInterval;
@@ -53,10 +60,19 @@ public class DictionaryConfigure {
         this.comparator = comparator;
     }
 
+    public Class<? extends DictionaryValueParser> getValueParser() {
+        return valueParser;
+    }
+
+    public void setValueParser(Class<? extends DictionaryValueParser> valueParser) {
+        this.valueParser = valueParser;
+    }
+
     @Override
     public String toString() {
         return "\r\nrefreshInterval=" + refreshInterval +
                 ", \r\nrefreshEveryTime=" + refreshEveryTime +
-                ", \r\ncomparator=" + comparator;
+                ", \r\ncomparator=" + comparator +
+                ", \r\nvalueParser=" + valueParser;
     }
 }

@@ -60,7 +60,7 @@ public class DictionaryHelper {
     public static void configure(DictionaryConfigure configure) {
         DictionaryHelper.configure = configure;
         logger.info("dictionary configure = " + configure.toString());
-        cacheHolder = new CacheHolder(configure.getComparator());
+        cacheHolder = new CacheHolder(configure.getComparator(), configure.getValueParser());
         if(!configure.isRefreshEveryTime()) {
             // 定时刷新缓存
             timer.schedule(new TimerTask() {

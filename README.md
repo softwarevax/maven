@@ -5,7 +5,7 @@ deploy发布到远程仓库:
 4个小时到https://search.maven.org
 
 一天到https://mvnrepository.com
-## 数据字典插件(当前版本0.0.2.RELEASE)
+## 数据字典插件(当前版本0.0.3.RELEASE)
 [github地址](https://github.com/softwarevax/maven.git)
 >版本列表(已提交到中央仓库)
 * 0.0.1-RELEASE
@@ -285,6 +285,28 @@ public class User {
 }
 2、提供刷新字典缓存的接口
 ip:port/dict/refresh
+```
+
+Version 0.0.3.RELEASE Finished at 2022-06-12
+```aidl
+issue1:
+1、修复问题：字典的类型和业务字段的类型不一致时，无法适配，如：字典的值为"1",而业务字段的值为1,
+解决方案：默认转为字符串匹配，可实现接口DictionaryValueComparator，自定义实现两值的比较，可通过dictionary.configure.comparator配置实现类
+```
+```aidl
+issue2:
+2、修复问题：子类继承父类，在父类中添加字典注解不生效
+解决方案：获取从父类继承的属性，设置从父类继承的属性
+```
+```aidl
+issue3:
+3、修复问题：字典类型是Integer类型，反显后的值是String,那么类型转化失败
+解决方案：目前只实现两个类型的转换，基础类型转字符串和布尔类型
+3.1、基础类型转字符串，调用的是String.valueOf();
+3.2、基础类型转布尔，先将基础类型转为int类型，若大于0，则为true，反之false
+注：DictionaryValueParser.parse(Object val, Class<T> clazz)
+val为从字典中查询出的值，clazz为Dictionary注解中property的类型，即要设置属性值的类型，也就是目标类型
+可实现DictionaryValueParser接口，完成其他类型的转换,可通过dictionary.configure.value-parser配置实现类
 ```
 
 github tag:
