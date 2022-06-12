@@ -5,7 +5,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@EnableDictionary(true)
+@EnableDictionary
 @SpringBootApplication
 @MapperScan("com.github.softwarevax.dict.mybatis.dao")
 public class MybatisDictionaryStaterApplication {

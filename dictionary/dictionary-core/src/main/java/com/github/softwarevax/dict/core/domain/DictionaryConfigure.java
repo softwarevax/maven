@@ -1,5 +1,8 @@
 package com.github.softwarevax.dict.core.domain;
 
+import com.github.softwarevax.dict.core.interfaces.DictionaryValueComparator;
+import com.github.softwarevax.dict.core.resolver.DefaultValueComparator;
+
 /**
  * @author ctw
  * 缓存刷新策略
@@ -8,7 +11,7 @@ package com.github.softwarevax.dict.core.domain;
 public class DictionaryConfigure {
 
     /**
-     * refresh period, 单位s, 最快5s刷新一次
+     * refresh period, 单位s, 最快5s刷新一次, 小于或等于5秒，则使用默认值
      */
     private long refreshInterval = 3600 * 1000;
 
@@ -16,6 +19,12 @@ public class DictionaryConfigure {
      * Whether the cache is flushed before each request
      */
     private boolean refreshEveryTime = false;
+
+    /**
+     * the compare ===> Values retrieved from the dictionary cache are compared to values queried in the database
+     * default compare : DefaultValueCompare.class
+     */
+    private Class<? extends DictionaryValueComparator> comparator = DefaultValueComparator.class;
 
     public long getRefreshInterval() {
         return refreshInterval;
@@ -34,5 +43,20 @@ public class DictionaryConfigure {
 
     public void setRefreshEveryTime(boolean refreshEveryTime) {
         this.refreshEveryTime = refreshEveryTime;
+    }
+
+    public Class<? extends DictionaryValueComparator> getComparator() {
+        return comparator;
+    }
+
+    public void setComparator(Class<? extends DictionaryValueComparator> comparator) {
+        this.comparator = comparator;
+    }
+
+    @Override
+    public String toString() {
+        return "\r\nrefreshInterval=" + refreshInterval +
+                ", \r\nrefreshEveryTime=" + refreshEveryTime +
+                ", \r\ncomparator=" + comparator;
     }
 }

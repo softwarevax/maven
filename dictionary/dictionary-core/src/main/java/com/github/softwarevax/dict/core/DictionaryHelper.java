@@ -2,7 +2,6 @@ package com.github.softwarevax.dict.core;
 
 
 import com.github.softwarevax.dict.core.domain.DictionaryConfigure;
-import com.github.softwarevax.dict.core.event.AfterRefreshEvent;
 import com.github.softwarevax.dict.core.event.DictionaryEvent;
 import com.github.softwarevax.dict.core.event.DictionaryEventType;
 import com.github.softwarevax.dict.core.interfaces.DictionaryLoader;
@@ -35,34 +34,24 @@ public class DictionaryHelper {
     private static List<DictionaryLoader> dictLoaders = new ArrayList<>();
 
     /**
-     * 字典配置
-     */
-    private static DictionaryConfigure configure = new DictionaryConfigure();
-
-    /**
      * 通知事件
      */
     private static List<DictionaryEvent> events = new ArrayList<>();
-
-    /**
-     * 缓存
-     */
-    private static CacheHolder cacheHolder = new CacheHolder();
 
     /**
      * 刷新缓存的定时器
      */
     private static Timer timer = new Timer("dict-refresh");
 
-    static {
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                reLoad();
-            }
-        }, 0, configure.getRefreshInterval());
-        events.add((AfterRefreshEvent) obj -> logger.info("dictionary reload finished"));
-    }
+    /**
+     * 字典配置
+     */
+    private static DictionaryConfigure configure;
+
+    /**
+     * 缓存
+     */
+    private static CacheHolder cacheHolder;
 
     /**
      * 设置配置信息
@@ -70,8 +59,8 @@ public class DictionaryHelper {
      */
     public static void configure(DictionaryConfigure configure) {
         DictionaryHelper.configure = configure;
-        timer.cancel();
-        timer.purge();
+        logger.info("dictionary configure = " + configure.toString());
+        cacheHolder = new CacheHolder(configure.getComparator());
         if(!configure.isRefreshEveryTime()) {
             // 定时刷新缓存
             timer.schedule(new TimerTask() {
@@ -95,6 +84,7 @@ public class DictionaryHelper {
      * 加载所有缓存，并组合统一管理, 重新调用刷新所有缓存
      */
     public static void reLoad() {
+        logger.info("dictionary reload");
         notify(events, cacheHolder.cache, DictionaryEventType.BEFORE_REFRESH);
         cacheHolder.clear();
         for(DictionaryLoader loader : dictLoaders) {

@@ -3,10 +3,8 @@ package com.github.softwarevax.dict.core;
 import com.github.softwarevax.dict.core.domain.DictionaryEntity;
 import com.github.softwarevax.dict.core.enums.DictField;
 import com.github.softwarevax.dict.core.interfaces.DictionaryTable;
-import com.github.softwarevax.dict.core.utils.BeanUtils;
-import com.github.softwarevax.dict.core.utils.DictionaryUtils;
-import com.github.softwarevax.dict.core.utils.ListUtils;
-import com.github.softwarevax.dict.core.utils.StringUtils;
+import com.github.softwarevax.dict.core.interfaces.DictionaryValueComparator;
+import com.github.softwarevax.dict.core.utils.*;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
@@ -35,6 +33,16 @@ public class CacheHolder {
      * 安全锁
      */
     private ReentrantLock lock = new ReentrantLock();
+
+    /**
+     * 比较器，匹配业务表和字典表值，可自定义
+     */
+    private DictionaryValueComparator comparator;
+
+    public CacheHolder(Class<? extends DictionaryValueComparator> comparator) {
+        Assert.isTrue(!comparator.isInterface(), "comparator不能是接口");
+        this.comparator = BeanUtils.newInstance(comparator);
+    }
 
     public void put(DictionaryTable table, List<Map<String, Object>> value) {
         try {
@@ -122,7 +130,8 @@ public class CacheHolder {
                     flag = false;
                     continue;
                 }
-                if(!cache.get(key).equals(entry.getValue())) {
+                // 字典缓存中取出的值 比较 数据库中查询的值 fixup: 适配:"1" == 1
+                if(!comparator.compare(cache.get(key), entry.getValue())) {
                     flag = false;
                 }
             }

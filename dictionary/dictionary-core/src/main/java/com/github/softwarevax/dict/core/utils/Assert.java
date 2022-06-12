@@ -6,6 +6,12 @@ package com.github.softwarevax.dict.core.utils;
  */
 public class Assert {
 
+    public static void isTrue(boolean express, String msg) {
+        if(!express) {
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
     public static void notNull(Object obj, String msg) {
         if(obj == null) {
             throw new IllegalArgumentException(StringUtils.isBlank(msg) ? "" : msg);

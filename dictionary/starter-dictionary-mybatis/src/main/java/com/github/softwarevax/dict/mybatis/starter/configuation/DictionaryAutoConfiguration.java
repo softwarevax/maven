@@ -30,7 +30,7 @@ public class DictionaryAutoConfiguration {
                 dbLoader.addDictionaryTable(table);
             }
         }
-        DictionaryInterceptor interceptor = new DictionaryInterceptor(dbLoader);
+        DictionaryInterceptor interceptor = new DictionaryInterceptor(dbLoader, constant.getConfigure());
         return interceptor;
     }
 }

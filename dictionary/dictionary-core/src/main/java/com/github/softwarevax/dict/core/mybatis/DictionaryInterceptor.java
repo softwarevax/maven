@@ -2,6 +2,7 @@ package com.github.softwarevax.dict.core.mybatis;
 
 import com.github.softwarevax.dict.core.DictionaryHelper;
 import com.github.softwarevax.dict.core.database.DatabaseLoader;
+import com.github.softwarevax.dict.core.domain.DictionaryConfigure;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.plugin.*;
@@ -13,8 +14,13 @@ import java.util.Properties;
 @Intercepts({@Signature(type = ResultSetHandler.class, method = "handleResultSets", args = {Statement.class})})
 public class DictionaryInterceptor implements Interceptor {
 
-    public DictionaryInterceptor(DatabaseLoader dbLoader) {
+    public DictionaryInterceptor(DatabaseLoader dbLoader, DictionaryConfigure configure) {
         DictionaryHelper.addLoader(dbLoader);
+        DictionaryHelper.configure(configure);
+    }
+
+    public DictionaryInterceptor(DatabaseLoader dbLoader) {
+        this(dbLoader, new DictionaryConfigure());
     }
 
     @Override
