@@ -1,0 +1,100 @@
+{
+  "groups": [
+    {
+      "name": "support.lock",
+      "type": "com.github.softwarevax.support.lock.configuration.LockConstant",
+      "sourceType": "com.github.softwarevax.support.lock.configuration.LockConstant"
+    },
+    {
+      "name": "support.page",
+      "type": "com.github.softwarevax.support.page.configuration.PaginationConstant",
+      "sourceType": "com.github.softwarevax.support.page.configuration.PaginationConstant"
+    },
+    {
+      "name": "support.result",
+      "type": "com.github.softwarevax.support.result.configuration.ResultConstant",
+      "sourceType": "com.github.softwarevax.support.result.configuration.ResultConstant"
+    }
+  ],
+  "properties": [
+    {
+      "name": "support.lock.enable",
+      "type": "java.lang.Boolean",
+      "description": "是否启用分布式锁, 默认不启用, 仅当support.lock.enable=true是开启",
+      "sourceType": "com.github.softwarevax.support.lock.configuration.LockConstant"
+    },
+    {
+      "name": "support.lock.expired",
+      "type": "java.lang.Long",
+      "description": "过期时间",
+      "sourceType": "com.github.softwarevax.support.lock.configuration.LockConstant"
+    },
+    {
+      "name": "support.lock.prefix",
+      "type": "java.lang.String",
+      "description": "锁前缀",
+      "sourceType": "com.github.softwarevax.support.lock.configuration.LockConstant"
+    },
+    {
+      "name": "support.lock.retry-interval",
+      "type": "java.lang.Long",
+      "description": "获取锁失败后的重试间隔，单位毫秒",
+      "sourceType": "com.github.softwarevax.support.lock.configuration.LockConstant"
+    },
+    {
+      "name": "support.lock.type",
+      "type": "com.github.softwarevax.support.lock.configuration.enums.LockEnum",
+      "description": "锁类型，Redis, Zookeeper, MySQL, Oracle",
+      "sourceType": "com.github.softwarevax.support.lock.configuration.LockConstant"
+    },
+    {
+      "name": "support.page.clear-page",
+      "type": "java.lang.Boolean",
+      "description": "方法执行完，是否清除分页信息",
+      "sourceType": "com.github.softwarevax.support.page.configuration.PaginationConstant"
+    },
+    {
+      "name": "support.page.enable",
+      "type": "java.lang.Boolean",
+      "description": "是否启用注解分页",
+      "sourceType": "com.github.softwarevax.support.page.configuration.PaginationConstant"
+    },
+    {
+      "name": "support.page.max-page-size",
+      "type": "java.lang.Integer",
+      "description": "最大的页大小（含配置值），pageSize过大，查询多时容易导致查询慢, 不宜设置过大, 不设置时，不限制",
+      "sourceType": "com.github.softwarevax.support.page.configuration.PaginationConstant"
+    },
+    {
+      "name": "support.page.order-by",
+      "type": "java.lang.String",
+      "description": "排序orderBy 返回前端的实体: User {     String id;     String userName;     String sex; } 排序时 eg: userName asc, sex desc",
+      "sourceType": "com.github.softwarevax.support.page.configuration.PaginationConstant"
+    },
+    {
+      "name": "support.page.page-num",
+      "type": "java.lang.String",
+      "description": "pageNum，页码(从url，application\/x-www-form-urlencoded表单中获取, json第一层中获取，后面考虑支持通过spel表达式获取)，取不到值时，分页不会生效",
+      "sourceType": "com.github.softwarevax.support.page.configuration.PaginationConstant"
+    },
+    {
+      "name": "support.page.page-size",
+      "type": "java.lang.String",
+      "description": "pageSize的参数名，页大小(从url，application\/x-www-form-urlencoded表单中获取, json第一层中获取，后面考虑支持通过spel表达式获取)，取不到值时，分页不会生效",
+      "sourceType": "com.github.softwarevax.support.page.configuration.PaginationConstant"
+    },
+    {
+      "name": "support.result.enable",
+      "type": "java.lang.Boolean",
+      "description": "是否启用结果包装 仅当support.result.enable=true是开启",
+      "sourceType": "com.github.softwarevax.support.result.configuration.ResultConstant"
+    },
+    {
+      "name": "support.result.wrapper-impl",
+      "type": "java.lang.Class<? extends com.github.softwarevax.support.result.IResult>",
+      "description": "自定义返回结果包装类，默认使用ResultDto",
+      "sourceType": "com.github.softwarevax.support.result.configuration.ResultConstant"
+    }
+  ],
+  "hints": []
+}
