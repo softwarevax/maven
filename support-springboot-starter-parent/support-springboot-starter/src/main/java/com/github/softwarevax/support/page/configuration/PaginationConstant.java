@@ -44,6 +44,13 @@ public class PaginationConstant {
      */
     private Boolean clearPage = true;
 
+    /**
+     * 如果没有拿到分页相关参数，是否跳过分页，全局默认不跳过，且不可配置，可通过注解Pagination.skipIfMissing单独设置
+     * 跳过：即使没拿到，也不会报错，但分页不起效果，此时可当作列表查询使用
+     * 不跳过：没拿到参数时，抛出异常
+     */
+    private Boolean skipIfMissing = false;
+
     public Boolean getEnable() {
         return enable;
     }
@@ -90,5 +97,9 @@ public class PaginationConstant {
 
     public void setOrderBy(String orderBy) {
         this.orderBy = orderBy;
+    }
+
+    public Boolean getSkipIfMissing() {
+        return skipIfMissing;
     }
 }

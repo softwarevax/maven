@@ -68,24 +68,22 @@ public class PaginationAspect implements SmartInitializingSingleton {
         String orderBy = pageValue(annotation.orderBy(), constant.getOrderBy());
         // 用户定义的最大页大小
         int userDefineMaxPageSize = annotation.maxPageSize();
+        // 分页参数名拿不到时，是否跳过分页功能，且不报错
+        boolean skipIfMissing = annotation.skipIfMissing();
         // 2、参数校验pageSize、pageNum、maxPageSize
         Map<String, Object> parameterMap = HttpServletUtils.compositeMap();
-        if(!parameterMap.containsKey(pageSize)) {
-            logger.warn("{}参数名为空，分页不生效", pageSize);
+        if(returnIfMissing(parameterMap.containsKey(pageSize), skipIfMissing, pageSize)) {
             return;
         }
-        if(!parameterMap.containsKey(pageNum)) {
-            logger.warn("{}参数名为空，分页不生效", pageNum);
+        if(returnIfMissing(parameterMap.containsKey(pageNum), skipIfMissing, pageNum)) {
             return;
         }
         Integer pageSizeVal = parseInt(parameterMap.get(pageSize));
         Integer pageNumVal = parseInt(parameterMap.get(pageNum));
-        if(Objects.isNull(pageSizeVal) || pageSizeVal <= 0) {
-            logger.warn("{}参数值为无效，分页不生效", pageSize);
+        if(returnIfMissing(!Objects.isNull(pageSizeVal) && pageSizeVal > 0, skipIfMissing, pageSize)) {
             return;
         }
-        if(Objects.isNull(pageNumVal) || pageNumVal <= 0) {
-            logger.warn("{}参数值为无效，分页不生效", pageNum);
+        if(returnIfMissing(!Objects.isNull(pageNumVal) && pageNumVal > 0, skipIfMissing, pageNum)) {
             return;
         }
         // 3、maxPageSize，优先使用注解Pagination中的值，如果没有设置，则使用配置中的值，若没有配置，则不校验
@@ -155,6 +153,26 @@ public class PaginationAspect implements SmartInitializingSingleton {
             logger.error(e.getMessage(), e);
             return null;
         }
+    }
+
+    /**
+     * 没有参数名时，是跳过分页，还是抛出异常
+     * availableParameter = true，返回false（继续方法returnIfMissing后面的代码）
+     * availableParameter = false && skipIfMissing = true, return（返回调用方法returnIfMissing的方法）
+     * availableParameter = false && skipIfMissing = false, throw exception（抛出异常）
+     * @param availableParameter 是否有对应参数名或参数名有效
+     * @param skipIfMissing 当没有参数名时，是否跳过分页
+     * @param parameterName 参数名
+     * @return
+     */
+    private boolean returnIfMissing(boolean availableParameter, boolean skipIfMissing, String parameterName) {
+        if(availableParameter) {
+            // 有对应参数名或参数名有效，不直接返回，继续后面的分页操作
+            return false;
+        }
+        // 没有对应参数名
+        Assert.isTrue(skipIfMissing, "参数名[" + parameterName + "]没有找到或无效");
+        return true;
     }
 
     @Override

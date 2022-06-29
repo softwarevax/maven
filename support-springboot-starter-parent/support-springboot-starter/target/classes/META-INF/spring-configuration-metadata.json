@@ -62,7 +62,7 @@
     {
       "name": "support.page.max-page-size",
       "type": "java.lang.Integer",
-      "description": "最大的页大小（含配置值），pageSize过大，查询多时容易导致查询慢, 不宜设置过大, 不设置时，不限制",
+      "description": "最大的页大小（含配置值），pageSize过大，查询多时容易导致查询慢, 不宜设置过大, 不设置时，不限制 maxPageSize，优先使用注解Pagination中的值，如果没有设置，则使用配置中的值，若没有配置，则不校验",
       "sourceType": "com.github.softwarevax.support.page.configuration.PaginationConstant"
     },
     {
