@@ -24,7 +24,7 @@ public @interface Pagination {
     String orderBy() default "";
 
     /**
-     * @return 允许的最大页大小，小于0时，不限制
+     * @return 允许的最大页大小，小于或等于0时，不限制
      */
     int maxPageSize() default 0;
 
