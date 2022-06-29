@@ -1,7 +1,10 @@
 package com.github.softwarevax.support;
 
+import com.github.softwarevax.support.configure.SupportConstant;
+import com.github.softwarevax.support.configure.ThreadPoolAspect;
 import com.github.softwarevax.support.lock.configuration.LockConstant;
 import com.github.softwarevax.support.method.aspect.MethodInterceptorAdvice;
+import com.github.softwarevax.support.method.aspect.MethodListener;
 import com.github.softwarevax.support.method.bean.WebInterface;
 import com.github.softwarevax.support.method.configuration.MethodConstant;
 import com.github.softwarevax.support.page.configuration.PaginationConstant;
@@ -21,12 +24,14 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.Map;
 
 @ComponentScan(basePackages = {"com.github.softwarevax.support"})
-@EnableConfigurationProperties(value = {LockConstant.class, ResultConstant.class, PaginationConstant.class, MethodConstant.class})
+@EnableConfigurationProperties(value = {SupportConstant.class, LockConstant.class, ResultConstant.class, PaginationConstant.class, MethodConstant.class})
 public class SupportAutoConfiguration implements ApplicationContextAware, ApplicationListener<ApplicationReadyEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(SupportAutoConfiguration.class);
@@ -36,11 +41,15 @@ public class SupportAutoConfiguration implements ApplicationContextAware, Applic
     @Autowired
     private MethodConstant methodConstant;
 
+    @Autowired
+    private SupportConstant supportConstant;
+
     @Bean
     @ConditionalOnProperty(value = "support.method.enable", havingValue = "true")
     public DefaultPointcutAdvisor methodAdvisor() {
         Assert.hasText(methodConstant.getExpress(), "请配置切点表达式");
-        MethodInterceptorAdvice interceptor = new MethodInterceptorAdvice(ctx, methodConstant.getMethodListener());
+        List<Class<? extends MethodListener>> listeners = methodConstant.getMethodListener();
+        MethodInterceptorAdvice interceptor = new MethodInterceptorAdvice(ctx, listeners);
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
         pointcut.setExpression(methodConstant.getExpress());
         logger.info("method aop expression = {}", methodConstant.getExpress());
@@ -61,9 +70,24 @@ public class SupportAutoConfiguration implements ApplicationContextAware, Applic
      */
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+        // 1、初始化公共部分
+        ThreadPoolTaskExecutor executor = ctx.getBean(ThreadPoolTaskExecutor.class);
+        if(executor == null) {
+            // 如果应用没有初始化线程池，则创建一个(spring有默认的线程池)
+            executor = supportConstant.getThreadPool().threadPoolExecutor();
+        }
+        // 非需要使用线程池的切面，设置线程池
+        String[] beanNamesForType = ctx.getBeanNamesForType(ThreadPoolAspect.class);
+        for (String beanName : beanNamesForType) {
+            ThreadPoolAspect bean = (ThreadPoolAspect) ctx.getBean(beanName);
+            bean.setThreadPoolTaskExecutor(executor);
+        }
+        // 2、初始化method
         Map<String, WebInterface> interfaces = HttpServletUtils.getAllInterfaces(this.ctx);
         DefaultPointcutAdvisor advisor = ctx.getBean(DefaultPointcutAdvisor.class);
         MethodInterceptorAdvice advice = (MethodInterceptorAdvice) advisor.getAdvice();
         advice.setInterfaceMaps(interfaces);
+        // MethodInterceptorAdvice没有放入容器，但需要线程池
+        advice.setThreadPoolTaskExecutor(executor);
     }
 }

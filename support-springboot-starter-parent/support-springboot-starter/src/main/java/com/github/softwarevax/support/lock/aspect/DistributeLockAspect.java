@@ -1,6 +1,6 @@
 package com.github.softwarevax.support.lock.aspect;
 
-import com.github.softwarevax.support.lock.configuration.DefaultThreadFactory;
+import com.github.softwarevax.support.configure.ThreadPoolAspect;
 import com.github.softwarevax.support.lock.configuration.Lock;
 import com.github.softwarevax.support.lock.configuration.LockConstant;
 import com.github.softwarevax.support.lock.configuration.enums.LockEnum;
@@ -24,29 +24,26 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Method;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 @Aspect
 @Component
 @ConditionalOnProperty(name = "support.lock.enable", havingValue = "true")
-public class DistributeLockAspect implements SmartInitializingSingleton, ApplicationContextAware {
+public class DistributeLockAspect implements SmartInitializingSingleton, ApplicationContextAware, ThreadPoolAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(DistributeLockAspect.class);
 
     private static final String LOCK_SERVICE_NAME = "lockService";
 
-    private ThreadPoolExecutor executor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().availableProcessors(),
-            5, TimeUnit.MINUTES, new ArrayBlockingQueue<>(1000), new DefaultThreadFactory());
+    private ThreadPoolTaskExecutor executor;
 
     private ThreadLocal<String> lockKey = new ThreadLocal<>();
 
@@ -169,5 +166,10 @@ public class DistributeLockAspect implements SmartInitializingSingleton, Applica
         beanFactory.registerBeanDefinition(LOCK_SERVICE_NAME, beanDefinition);
         lockService = ctx.getBean(LockService.class);
         logger.info("{} 注册完成", LOCK_SERVICE_NAME);
+    }
+
+    @Override
+    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor executor) {
+        this.executor = executor;
     }
 }

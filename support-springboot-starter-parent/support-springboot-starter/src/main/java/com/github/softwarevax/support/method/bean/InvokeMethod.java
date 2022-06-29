@@ -1,7 +1,5 @@
 package com.github.softwarevax.support.method.bean;
 
-import com.alibaba.fastjson.JSON;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -16,6 +14,21 @@ import java.util.Objects;
  * @date 2022/6/29 14:44
  */
 public class InvokeMethod implements Cloneable {
+
+    /**
+     * 应用名称
+     */
+    private String application;
+
+    /**
+     * 会话id
+     */
+    private String sessionId;
+
+    /**
+     * 调用id
+     */
+    private long invokeId;
 
     /**
      * 是否暴露为接口（当前方法，是否加了注解，暴露为接口，供外部访问）
@@ -67,6 +80,11 @@ public class InvokeMethod implements Cloneable {
     private Object invokeObj;
 
     /**
+     * 开始时间
+     */
+    private long startTime;
+
+    /**
      * 方法的运行时间，单位：毫秒
      */
     private long elapsedTime;
@@ -75,6 +93,24 @@ public class InvokeMethod implements Cloneable {
      * 接口，expose为true时，interfaces不为空
      */
     private WebInterface interfaces;
+
+    /**
+     * 接口调用
+     */
+    private MethodInterfaceInvoke interfaceInvoke;
+
+    /**
+     * 启动时间
+     */
+    private String launchTime;
+
+    public String getApplication() {
+        return application;
+    }
+
+    public void setApplication(String application) {
+        this.application = application;
+    }
 
     public Boolean getExpose() {
         return expose;
@@ -164,6 +200,46 @@ public class InvokeMethod implements Cloneable {
         this.interfaces = interfaces;
     }
 
+    public long getInvokeId() {
+        return invokeId;
+    }
+
+    public void setInvokeId(long invokeId) {
+        this.invokeId = invokeId;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getLaunchTime() {
+        return launchTime;
+    }
+
+    public void setLaunchTime(String launchTime) {
+        this.launchTime = launchTime;
+    }
+
+    public MethodInterfaceInvoke getInterfaceInvoke() {
+        return interfaceInvoke;
+    }
+
+    public void setInterfaceInvoke(MethodInterfaceInvoke interfaceInvoke) {
+        this.interfaceInvoke = interfaceInvoke;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
     /**
      * fullMethodName 可确定唯一方法
      * @param o
@@ -180,11 +256,6 @@ public class InvokeMethod implements Cloneable {
     @Override
     public int hashCode() {
         return Objects.hash(fullMethodName);
-    }
-
-    @Override
-    public String toString() {
-        return JSON.toJSONString(this);
     }
 
     @Override

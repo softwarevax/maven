@@ -1,6 +1,11 @@
 {
   "groups": [
     {
+      "name": "support",
+      "type": "com.github.softwarevax.support.configure.SupportConstant",
+      "sourceType": "com.github.softwarevax.support.configure.SupportConstant"
+    },
+    {
       "name": "support.lock",
       "type": "com.github.softwarevax.support.lock.configuration.LockConstant",
       "sourceType": "com.github.softwarevax.support.lock.configuration.LockConstant"
@@ -67,7 +72,13 @@
     {
       "name": "support.method.method-listener",
       "type": "java.util.List<java.lang.Class<? extends com.github.softwarevax.support.method.aspect.MethodListener>>",
-      "description": "方法执行完后，将统计数据放到此类的callback方法中",
+      "description": "方法执行完后，将统收集的数据放到此类的callback方法中",
+      "sourceType": "com.github.softwarevax.support.method.configuration.MethodConstant"
+    },
+    {
+      "name": "support.method.persistence",
+      "type": "java.lang.Boolean",
+      "description": "是否持久化记录（方法，请求参数等数据）",
       "sourceType": "com.github.softwarevax.support.method.configuration.MethodConstant"
     },
     {
@@ -117,6 +128,12 @@
       "type": "java.lang.Class<? extends com.github.softwarevax.support.result.IResult>",
       "description": "自定义返回结果包装类，默认使用ResultDto",
       "sourceType": "com.github.softwarevax.support.result.configuration.ResultConstant"
+    },
+    {
+      "name": "support.thread-pool",
+      "type": "com.github.softwarevax.support.configure.ThreadPoolConfiguration",
+      "description": "线程池配置，若使用spring默认的线程池，此配置不会生效",
+      "sourceType": "com.github.softwarevax.support.configure.SupportConstant"
     }
   ],
   "hints": []

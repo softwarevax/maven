@@ -11,14 +11,26 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.util.*;
 
 public class HttpServletUtils {
 
+
     public static HttpServletRequest getRequest() {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         return requestAttributes.getRequest();
+    }
+
+    public static HttpServletResponse getResponse() {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        return requestAttributes.getResponse();
+    }
+
+    public static String getSessionId() {
+        HttpServletRequest request = getRequest();
+        return request.getSession().getId();
     }
 
     public static String getQueryString() {
@@ -48,6 +60,33 @@ public class HttpServletUtils {
             String parameterName = parameterNames.nextElement();
             String parameterValue = request.getParameter(parameterName);
             result.put(parameterName, parameterValue);
+        }
+        return result;
+    }
+
+    public static String remoteAddress() {
+        HttpServletRequest request = getRequest();
+        return request.getRemoteAddr() + ":" + request.getRemotePort();
+    }
+
+    public static String getSchema() {
+        HttpServletRequest request = getRequest();
+        return request.getScheme();
+    }
+
+    public static int getResponseStatus() {
+        HttpServletResponse response = getResponse();
+        return response.getStatus();
+    }
+
+    public static Map<String, String> getHeaders() {
+        Map<String, String> result = new HashMap<>();
+        HttpServletRequest request = getRequest();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            String headerValue = request.getHeader(headerName);
+            result.put(headerName, headerValue);
         }
         return result;
     }

@@ -103,8 +103,8 @@ public class TestController {
 
     @Pagination
     @ResponseBody
-    @PostMapping("/user/list")
-    public PageInfo<User> queryList(String pageSize) {
+    @PostMapping({"/user/list", "/q2we13"})
+    public PageInfo<User> queryList(String pageSize, String pageNum, User user) {
         List<User> list = userService.list();
         return new PageInfo<>(list);
     }

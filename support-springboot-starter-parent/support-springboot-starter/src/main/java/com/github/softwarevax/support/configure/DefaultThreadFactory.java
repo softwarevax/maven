@@ -1,4 +1,4 @@
-package com.github.softwarevax.support.lock.configuration;
+package com.github.softwarevax.support.configure;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,7 +17,7 @@ public class DefaultThreadFactory implements ThreadFactory {
         SecurityManager s = System.getSecurityManager();
         group = (s != null)? s.getThreadGroup() :
                 Thread.currentThread().getThreadGroup();
-        namePrefix = "distributed-lock-" + poolNumber.getAndIncrement() + "-thread-";
+        namePrefix = "support-" + poolNumber.getAndIncrement() + "-thread-";
     }
 
     @Override

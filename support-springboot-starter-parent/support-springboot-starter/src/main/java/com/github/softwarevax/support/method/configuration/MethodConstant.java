@@ -36,6 +36,11 @@ public class MethodConstant {
      */
     private List<Class<? extends MethodListener>> methodListener;
 
+    /**
+     * 是否持久化记录（方法，请求参数等数据）
+     */
+    private Boolean persistence = false;
+
     public Boolean getEnable() {
         return enable;
     }
@@ -58,5 +63,13 @@ public class MethodConstant {
 
     public void setMethodListener(List<Class<? extends MethodListener>> methodListener) {
         this.methodListener = methodListener;
+    }
+
+    public Boolean getPersistence() {
+        return persistence;
+    }
+
+    public void setPersistence(Boolean persistence) {
+        this.persistence = persistence;
     }
 }
