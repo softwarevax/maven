@@ -135,6 +135,12 @@ public class PaginationAspect implements SmartInitializingSingleton {
         return true;
     }
 
+    /**
+     * 用户没有定义变量，则使用默认值
+     * @param userDefined 用户变量值
+     * @param defaultValue 默认值
+     * @return
+     */
     private String pageValue(String userDefined, String defaultValue) {
         if(StringUtils.isBlank(userDefined)) {
             return defaultValue;
@@ -142,6 +148,11 @@ public class PaginationAspect implements SmartInitializingSingleton {
         return userDefined;
     }
 
+    /**
+     * 参数值转整数，无法转换，或没有值时，返回null
+     * @param obj
+     * @return
+     */
     private Integer parseInt(Object obj) {
         if(obj == null) {
             return null;

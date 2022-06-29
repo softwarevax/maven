@@ -1,4 +1,4 @@
 package com.github.softwarevax.support.result;
 /**
- * 响应结果
+ * 响应结果包装
  */

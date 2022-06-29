@@ -3,7 +3,7 @@ package com.github.softwarevax.support.demo.controller;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.github.softwarevax.support.demo.entity.User;
-import com.github.softwarevax.support.demo.mapper.UserMapper;
+import com.github.softwarevax.support.demo.service.UserService;
 import com.github.softwarevax.support.page.Pagination;
 import com.github.softwarevax.support.result.ResultDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +19,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
+@RequestMapping("/aaa")
 public class TestController {
 
     @Autowired
-    UserMapper userMapper;
+    private UserService userService;
 
     /**
      * 字符串
@@ -100,11 +101,11 @@ public class TestController {
         return user;
     }
 
-    @Pagination(maxPageSize = 100)
+    @Pagination
     @ResponseBody
     @PostMapping("/user/list")
-    public PageInfo<User> queryList() {
-        List<User> list = userMapper.list();
+    public PageInfo<User> queryList(String pageSize) {
+        List<User> list = userService.list();
         return new PageInfo<>(list);
     }
 }

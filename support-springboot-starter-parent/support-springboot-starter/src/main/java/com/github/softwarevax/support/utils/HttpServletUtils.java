@@ -1,16 +1,18 @@
 package com.github.softwarevax.support.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.github.softwarevax.support.method.bean.WebInterface;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HttpServletUtils {
 
@@ -79,5 +81,25 @@ public class HttpServletUtils {
     public static String getMethod() {
         HttpServletRequest request = getRequest();
         return request.getMethod();
+    }
+
+    /**
+     * 获取所有的接口
+     * @param ctx
+     * @return
+     */
+    public static Map<String, WebInterface> getAllInterfaces(ApplicationContext ctx) {
+        Map<String, WebInterface> map = new HashMap<>();
+        RequestMappingHandlerMapping mappings = ctx.getBean(RequestMappingHandlerMapping.class);
+        Map<RequestMappingInfo, HandlerMethod> handlerMethods = mappings.getHandlerMethods();
+        Iterator<Map.Entry<RequestMappingInfo, HandlerMethod>> iterator = handlerMethods.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<RequestMappingInfo, HandlerMethod> next = iterator.next();
+            RequestMappingInfo key = next.getKey();
+            HandlerMethod value = next.getValue();
+            String methodName = CommonUtils.getMethodName(value.getMethod());
+            map.put(methodName, new WebInterface(key, value));
+        }
+        return map;
     }
 }

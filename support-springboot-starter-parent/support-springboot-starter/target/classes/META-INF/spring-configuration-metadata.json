@@ -6,6 +6,11 @@
       "sourceType": "com.github.softwarevax.support.lock.configuration.LockConstant"
     },
     {
+      "name": "support.method",
+      "type": "com.github.softwarevax.support.method.configuration.MethodConstant",
+      "sourceType": "com.github.softwarevax.support.method.configuration.MethodConstant"
+    },
+    {
       "name": "support.page",
       "type": "com.github.softwarevax.support.page.configuration.PaginationConstant",
       "sourceType": "com.github.softwarevax.support.page.configuration.PaginationConstant"
@@ -46,6 +51,18 @@
       "type": "com.github.softwarevax.support.lock.configuration.enums.LockEnum",
       "description": "锁类型，Redis, Zookeeper, MySQL, Oracle",
       "sourceType": "com.github.softwarevax.support.lock.configuration.LockConstant"
+    },
+    {
+      "name": "support.method.enable",
+      "type": "java.lang.Boolean",
+      "description": "是否启用方法切面",
+      "sourceType": "com.github.softwarevax.support.method.configuration.MethodConstant"
+    },
+    {
+      "name": "support.method.express",
+      "type": "java.lang.String",
+      "description": "切点表达式, eg: execution(* com.github.softwarevax.support.demo..*.*(..)) 第一个星号：返回类型不限制 第二个星号：匹配所有类 第三个星号：匹配所有方法 第一个..: 表示包com.github.softwarevax.support.demo及其子包 第二个..: 表示方法参数不限制",
+      "sourceType": "com.github.softwarevax.support.method.configuration.MethodConstant"
     },
     {
       "name": "support.page.clear-page",
