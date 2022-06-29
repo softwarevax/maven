@@ -71,6 +71,11 @@ public class InvokeMethod implements Cloneable {
      */
     private long elapsedTime;
 
+    /**
+     * 接口，expose为true时，interfaces不为空
+     */
+    private WebInterface interfaces;
+
     public Boolean getExpose() {
         return expose;
     }
@@ -149,6 +154,14 @@ public class InvokeMethod implements Cloneable {
 
     public void setElapsedTime(long elapsedTime) {
         this.elapsedTime = elapsedTime;
+    }
+
+    public WebInterface getInterfaces() {
+        return interfaces;
+    }
+
+    public void setInterfaces(WebInterface interfaces) {
+        this.interfaces = interfaces;
     }
 
     /**

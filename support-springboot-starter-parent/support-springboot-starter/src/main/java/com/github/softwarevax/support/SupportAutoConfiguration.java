@@ -40,7 +40,7 @@ public class SupportAutoConfiguration implements ApplicationContextAware, Applic
     @ConditionalOnProperty(value = "support.method.enable", havingValue = "true")
     public DefaultPointcutAdvisor methodAdvisor() {
         Assert.hasText(methodConstant.getExpress(), "请配置切点表达式");
-        MethodInterceptorAdvice interceptor = new MethodInterceptorAdvice(ctx);
+        MethodInterceptorAdvice interceptor = new MethodInterceptorAdvice(ctx, methodConstant.getMethodListener());
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
         pointcut.setExpression(methodConstant.getExpress());
         logger.info("method aop expression = {}", methodConstant.getExpress());

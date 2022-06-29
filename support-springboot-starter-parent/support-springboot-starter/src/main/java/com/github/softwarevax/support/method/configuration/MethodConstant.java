@@ -1,6 +1,9 @@
 package com.github.softwarevax.support.method.configuration;
 
+import com.github.softwarevax.support.method.aspect.MethodListener;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.List;
 
 /**
  * @author twcao
@@ -28,6 +31,11 @@ public class MethodConstant {
      */
     private String express;
 
+    /**
+     * 方法执行完后，将统收集的数据放到此类的callback方法中
+     */
+    private List<Class<? extends MethodListener>> methodListener;
+
     public Boolean getEnable() {
         return enable;
     }
@@ -42,5 +50,13 @@ public class MethodConstant {
 
     public void setExpress(String express) {
         this.express = express;
+    }
+
+    public List<Class<? extends MethodListener>> getMethodListener() {
+        return methodListener;
+    }
+
+    public void setMethodListener(List<Class<? extends MethodListener>> methodListener) {
+        this.methodListener = methodListener;
     }
 }

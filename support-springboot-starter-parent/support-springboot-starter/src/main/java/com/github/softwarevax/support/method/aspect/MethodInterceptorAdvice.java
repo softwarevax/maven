@@ -6,14 +6,12 @@ import com.github.softwarevax.support.utils.CommonUtils;
 import com.github.softwarevax.support.utils.StringUtils;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StopWatch;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Stack;
+import java.util.*;
 
 public class MethodInterceptorAdvice implements MethodInterceptor {
 
@@ -33,8 +31,11 @@ public class MethodInterceptorAdvice implements MethodInterceptor {
      */
     private ThreadLocal<Stack<StopWatch>> threadLocal = new ThreadLocal<>();
 
-    public MethodInterceptorAdvice(ApplicationContext ctx) {
+    private List<MethodListener> listeners = new ArrayList<>();
+
+    public MethodInterceptorAdvice(ApplicationContext ctx, List<Class<? extends MethodListener>> listenerClazz) {
         this.ctx = ctx;
+        listenerClazz.stream().forEach(row -> listeners.add(BeanUtils.instantiateClass(row)));
     }
 
     @Override
@@ -50,23 +51,36 @@ public class MethodInterceptorAdvice implements MethodInterceptor {
         StopWatch watch = new StopWatch();
         watch.start();
         stopWatches.add(watch);
-        Object ret = invocation.proceed();
-        // 获取 -> 出栈 -> 关闭
-        watch = threadLocal.get().pop();
-        watch.stop();
-        // 提取方法中的数据
-        InvokeMethod invokeMethod = parse(invocation, ret);
-        invokeMethod.setElapsedTime(watch.getTotalTimeMillis());
+        Object ret = null;
+        try {
+            ret = invocation.proceed();
+        } catch (Throwable e) {
+            // 如果抛出了异常，则先执行完finally中的计时和请求解析，然后将异常原样抛出
+            throw e;
+        } finally {
+            // 获取 -> 出栈 -> 关闭
+            watch = threadLocal.get().pop();
+            watch.stop();
+            // 以下操作，需放入线程池中
+            // 提取方法中的数据
+            InvokeMethod invokeMethod = parseMethod(invocation, ret);
+            invokeMethod.setElapsedTime(watch.getTotalTimeMillis());
+            listeners.stream().forEach(row -> row.callBack(invokeMethod));
+        }
         return ret;
     }
 
-    private InvokeMethod parse(MethodInvocation invocation, Object ret) {
+    private InvokeMethod parseMethod(MethodInvocation invocation, Object ret) {
         InvokeMethod invokeMethod = new InvokeMethod();
         Method method = invocation.getMethod();
         // 方法返回值
         String returnType = method.getReturnType().getCanonicalName();
         String fullMethodName = CommonUtils.getMethodName(method);
-        invokeMethod.setExpose(interfaceMaps.containsKey(fullMethodName));
+        invokeMethod.setExpose(false);
+        if(interfaceMaps.containsKey(fullMethodName)) {
+            invokeMethod.setExpose(true);
+            invokeMethod.setInterfaces(interfaceMaps.get(fullMethodName));
+        }
         String argument = StringUtils.substring(fullMethodName, StringUtils.indexOf(fullMethodName, "(") + 1, StringUtils.indexOf(fullMethodName, (")")));
         invokeMethod.setArg(argument);
         invokeMethod.setMethodName(method.getName());

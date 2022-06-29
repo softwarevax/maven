@@ -1,4 +1,4 @@
-package com.github.softwarevax.support.demo;
+package com.github.softwarevax.support.demo.custom;
 
 import com.alibaba.fastjson.JSON;
 import com.github.softwarevax.support.result.IResult;
