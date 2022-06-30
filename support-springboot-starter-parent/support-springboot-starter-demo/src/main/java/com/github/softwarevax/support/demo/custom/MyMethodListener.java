@@ -1,6 +1,6 @@
 package com.github.softwarevax.support.demo.custom;
 
-import com.github.softwarevax.support.method.aspect.MethodListener;
+import com.github.softwarevax.support.method.aspect.MethodInvokeNoticer;
 import com.github.softwarevax.support.method.bean.InvokeMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * @description: TODO
  * @date 2022/6/29 18:03
  */
-public class MyMethodListener implements MethodListener {
+public class MyMethodListener implements MethodInvokeNoticer {
 
     private Logger logger = LoggerFactory.getLogger(MyMethodListener.class);
 

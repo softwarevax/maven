@@ -21,9 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class DefaultMethodListener implements MethodListener {
+public class PersistenceMethodInvokeNoticer implements MethodInvokeNoticer {
 
-    private Logger logger = LoggerFactory.getLogger(DefaultMethodListener.class);
+    private Logger logger = LoggerFactory.getLogger(PersistenceMethodInvokeNoticer.class);
 
     private Map<String, MethodPo> methodMaps = new HashMap<>();
 
@@ -31,6 +31,7 @@ public class DefaultMethodListener implements MethodListener {
 
     @Override
     public void callBack(InvokeMethod method) {
+        Assert.notNull(template, "JdbcTemplate获取失败");
         MethodPo staticInfo = getMethodStaticInfo(method);
         if(!methodMaps.containsKey(staticInfo.getFullMethodName())) {
             insertMethod(staticInfo);

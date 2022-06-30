@@ -3,9 +3,9 @@ package com.github.softwarevax.support.configure;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
- * 需要线程池的切面
+ * 需要设置线程池的类，可实现此接口
  */
-public interface ThreadPoolAspect {
+public interface ThreadPoolDemander {
 
     void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor executor);
 

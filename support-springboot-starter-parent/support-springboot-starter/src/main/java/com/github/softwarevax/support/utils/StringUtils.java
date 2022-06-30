@@ -69,4 +69,22 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
         return sb.toString();
     }
+
+    /**
+     * 返回第一个不为空的字符窜
+     * @param css
+     * @return
+     */
+    public static String getFirstNotBlank(String ... css) {
+        if(css == null || css.length == 0) {
+            return "";
+        }
+        int length = css.length;
+        for (int i = 0; i < length; i++) {
+            if(isNotBlank(css[i])) {
+                return css[i];
+            }
+        }
+        return "";
+    }
 }

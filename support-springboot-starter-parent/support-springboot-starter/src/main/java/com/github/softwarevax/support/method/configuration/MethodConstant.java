@@ -1,8 +1,10 @@
 package com.github.softwarevax.support.method.configuration;
 
-import com.github.softwarevax.support.method.aspect.MethodListener;
+import com.github.softwarevax.support.method.aspect.MethodInvokeNoticer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.core.Ordered;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,9 +34,14 @@ public class MethodConstant {
     private String express;
 
     /**
+     * 切面的顺序, 当一个切点存在于多个切面时，可设置控制顺序
+     */
+    private int order = Ordered.LOWEST_PRECEDENCE;
+
+    /**
      * 方法执行完后，将统收集的数据放到此类的callback方法中
      */
-    private List<Class<? extends MethodListener>> methodListener;
+    private List<Class<? extends MethodInvokeNoticer>> noticers = new ArrayList<>();
 
     /**
      * 是否持久化记录（方法，请求参数等数据）
@@ -57,12 +64,12 @@ public class MethodConstant {
         this.express = express;
     }
 
-    public List<Class<? extends MethodListener>> getMethodListener() {
-        return methodListener;
+    public List<Class<? extends MethodInvokeNoticer>> getNoticers() {
+        return noticers;
     }
 
-    public void setMethodListener(List<Class<? extends MethodListener>> methodListener) {
-        this.methodListener = methodListener;
+    public void setNoticers(List<Class<? extends MethodInvokeNoticer>> noticers) {
+        this.noticers = noticers;
     }
 
     public Boolean getPersistence() {
@@ -71,5 +78,13 @@ public class MethodConstant {
 
     public void setPersistence(Boolean persistence) {
         this.persistence = persistence;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 }

@@ -1,6 +1,6 @@
 package com.github.softwarevax.support.lock.aspect;
 
-import com.github.softwarevax.support.configure.ThreadPoolAspect;
+import com.github.softwarevax.support.configure.ThreadPoolDemander;
 import com.github.softwarevax.support.lock.configuration.Lock;
 import com.github.softwarevax.support.lock.configuration.LockConstant;
 import com.github.softwarevax.support.lock.configuration.enums.LockEnum;
@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 @Aspect
 @Component
 @ConditionalOnProperty(name = "support.lock.enable", havingValue = "true")
-public class DistributeLockAspect implements SmartInitializingSingleton, ApplicationContextAware, ThreadPoolAspect {
+public class DistributeLockAspect implements SmartInitializingSingleton, ApplicationContextAware, ThreadPoolDemander {
 
     private static final Logger logger = LoggerFactory.getLogger(DistributeLockAspect.class);
 

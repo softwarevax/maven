@@ -8,6 +8,8 @@ public class InvokeStackInfo {
 
     private MethodInterfaceInvoke interfaceInvoke;
 
+    private Object returnObj;
+
     public InvokeStackInfo() {}
 
     public InvokeStackInfo(MethodInterfaceInvoke interfaceInvoke, String sessionId, long invokeId) {
@@ -38,5 +40,13 @@ public class InvokeStackInfo {
 
     public void setInterfaceInvoke(MethodInterfaceInvoke interfaceInvoke) {
         this.interfaceInvoke = interfaceInvoke;
+    }
+
+    public Object getReturnObj() {
+        return returnObj;
+    }
+
+    public void setReturnObj(Object returnObj) {
+        this.returnObj = returnObj;
     }
 }

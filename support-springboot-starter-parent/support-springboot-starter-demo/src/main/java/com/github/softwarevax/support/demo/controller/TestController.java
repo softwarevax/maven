@@ -6,6 +6,8 @@ import com.github.softwarevax.support.demo.entity.User;
 import com.github.softwarevax.support.demo.service.UserService;
 import com.github.softwarevax.support.page.Pagination;
 import com.github.softwarevax.support.result.ResultDto;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/aaa")
+@Api(tags = "测试接口")
 public class TestController {
 
     @Autowired
@@ -103,6 +106,7 @@ public class TestController {
 
     @Pagination
     @ResponseBody
+    @ApiOperation("用户列表查询")
     @PostMapping({"/user/list", "/q2we13"})
     public PageInfo<User> queryList(String pageSize, String pageNum, User user) {
         List<User> list = userService.list();
