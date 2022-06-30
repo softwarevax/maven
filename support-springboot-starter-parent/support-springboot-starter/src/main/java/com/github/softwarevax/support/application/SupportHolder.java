@@ -144,7 +144,7 @@ public class SupportHolder {
         }
         // 2、读取web应用的接口
         this.interfaceMaps = HttpServletUtils.getAllInterfaces(springCtx);
-        String applicationName = StringUtils.getFirstNotBlank(springCtx.getApplicationName(), springCtx.getId(), springCtx.getDisplayName());
+        String applicationName = StringUtils.getFirstNotBlank(StringUtils.strip(springCtx.getApplicationName(), "/"), springCtx.getId());
         supportCtx.put(PropertyKey.APPLICATION_NAME, applicationName);
     }
 

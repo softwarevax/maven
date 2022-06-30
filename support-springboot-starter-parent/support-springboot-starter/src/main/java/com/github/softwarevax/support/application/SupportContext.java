@@ -20,6 +20,7 @@ public class SupportContext {
 
     public SupportContext() {
         context = new Context();
+        initContext();
     }
 
     /**
