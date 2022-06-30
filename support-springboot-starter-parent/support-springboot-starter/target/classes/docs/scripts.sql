@@ -11,8 +11,9 @@ CREATE TABLE `distribute_lock`  (
 -- method
 CREATE TABLE `t_method` (
     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `application` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '应用名',
+    `application` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '应用名spring.application.name, 如果没设置，则取contextPath',
     `launch_time` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '启动时间，格式：yyyyMMddHHmmss',
+    `expose` tinyint(1) DEFAULT NULL COMMENT '是否是接口',
     `method` varchar(200) COLLATE utf8_bin DEFAULT NULL COMMENT '方法简称',
     `full_method_name` varchar(800) COLLATE utf8_bin DEFAULT NULL COMMENT '方法全称',
     `return_type` varchar(200) COLLATE utf8_bin DEFAULT NULL COMMENT '返回类型',
@@ -20,7 +21,7 @@ CREATE TABLE `t_method` (
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
     PRIMARY KEY (`id`),
     UNIQUE KEY `lanuch_method` (`launch_time`,`full_method_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用方法';
+) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用方法' COMMENT='应用方法';
 
 CREATE TABLE `t_method_invoke` (
    `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -34,7 +35,7 @@ CREATE TABLE `t_method_invoke` (
    `elapsed_time` int(11) DEFAULT NULL COMMENT '运行时长，单位：毫秒',
    `create_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
    PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用方法调用';
+) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用方法调用';
 
 CREATE TABLE `t_method_interface` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -43,17 +44,17 @@ CREATE TABLE `t_method_interface` (
   `mappings` varchar(500) COLLATE utf8_bin DEFAULT NULL COMMENT '请求路径，不含contextPath，如果支持多个，逗号分割',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用接口方法';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用接口方法';
 
 CREATE TABLE `t_method_interface_invoke` (
-     `id` int(11) NOT NULL COMMENT '主键',
-     `invoke_id` int(11) DEFAULT NULL COMMENT 't_method_invoke.id',
-     `scheme` varchar(40) COLLATE utf8_bin DEFAULT NULL COMMENT '协议',
-     `method` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '方法，get，post。。。',
-     `remote_addr` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '请求端地址',
-     `headers` varchar(2000) COLLATE utf8_bin DEFAULT NULL COMMENT '请求头，超过2000被截取',
-     `payload` varchar(4000) COLLATE utf8_bin DEFAULT NULL COMMENT '静荷载，超过4000被截取',
-     `response_status` int(11) DEFAULT NULL COMMENT '响应码',
-     `response_body` varchar(4000) COLLATE utf8_bin DEFAULT NULL COMMENT '响应体',
-     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用接口方法调用';
+ `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+ `invoke_id` int(11) DEFAULT NULL COMMENT 't_method_invoke.id',
+ `scheme` varchar(40) COLLATE utf8_bin DEFAULT NULL COMMENT '协议',
+ `method` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '方法，get，post。。。',
+ `remote_addr` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '请求端地址',
+ `headers` varchar(2000) COLLATE utf8_bin DEFAULT NULL COMMENT '请求头，超过2000被截取',
+ `payload` varchar(4000) COLLATE utf8_bin DEFAULT NULL COMMENT '静荷载，超过4000被截取',
+ `response_status` int(11) DEFAULT NULL COMMENT '响应码',
+ `response_body` varchar(4000) COLLATE utf8_bin DEFAULT NULL COMMENT '响应体',
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用接口方法调用';

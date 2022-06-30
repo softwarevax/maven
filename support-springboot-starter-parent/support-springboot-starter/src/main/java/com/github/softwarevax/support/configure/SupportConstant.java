@@ -2,6 +2,8 @@ package com.github.softwarevax.support.configure;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.Objects;
+
 @ConfigurationProperties(prefix = "support")
 public class SupportConstant {
 
@@ -11,6 +13,9 @@ public class SupportConstant {
     private ThreadPoolConfiguration threadPool;
 
     public ThreadPoolConfiguration getThreadPool() {
+        if(Objects.isNull(threadPool)) {
+            threadPool = new ThreadPoolConfiguration();
+        }
         return threadPool;
     }
 

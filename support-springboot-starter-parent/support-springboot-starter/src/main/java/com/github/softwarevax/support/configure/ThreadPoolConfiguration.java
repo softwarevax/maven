@@ -82,6 +82,7 @@ public class ThreadPoolConfiguration {
             threadPoolTaskExecutor.setKeepAliveSeconds(this.getKeepAlive());
             threadPoolTaskExecutor.setRejectedExecutionHandler(this.getHandler());
             threadPoolTaskExecutor.setThreadFactory(new DefaultThreadFactory());
+            threadPoolTaskExecutor.initialize();
             return threadPoolTaskExecutor;
         }
         return this.executor;

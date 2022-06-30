@@ -71,7 +71,12 @@ public class SupportAutoConfiguration implements ApplicationContextAware, Applic
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
         // 1、初始化公共部分
-        ThreadPoolTaskExecutor executor = ctx.getBean(ThreadPoolTaskExecutor.class);
+        ThreadPoolTaskExecutor executor = null;
+        try {
+            executor = ctx.getBean(ThreadPoolTaskExecutor.class);
+        } catch (Exception e) {
+            logger.warn("应用未定义线程池，创建默认线程池");
+        }
         if(executor == null) {
             // 如果应用没有初始化线程池，则创建一个(spring有默认的线程池)
             executor = supportConstant.getThreadPool().threadPoolExecutor();

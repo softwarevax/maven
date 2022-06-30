@@ -2,6 +2,7 @@ package com.github.softwarevax.support.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.github.softwarevax.support.method.bean.WebInterface;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -129,7 +130,11 @@ public class HttpServletUtils {
      */
     public static Map<String, WebInterface> getAllInterfaces(ApplicationContext ctx) {
         Map<String, WebInterface> map = new HashMap<>();
-        RequestMappingHandlerMapping mappings = ctx.getBean(RequestMappingHandlerMapping.class);
+        String[] beanNamesForType = ctx.getBeanNamesForType(RequestMappingHandlerMapping.class);
+        if(ArrayUtils.getLength(beanNamesForType) <= 0) {
+            return new HashMap<>();
+        }
+        RequestMappingHandlerMapping mappings = ctx.getBean("requestMappingHandlerMapping", RequestMappingHandlerMapping.class);
         Map<RequestMappingInfo, HandlerMethod> handlerMethods = mappings.getHandlerMethods();
         Iterator<Map.Entry<RequestMappingInfo, HandlerMethod>> iterator = handlerMethods.entrySet().iterator();
         while (iterator.hasNext()) {
