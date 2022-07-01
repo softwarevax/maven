@@ -5,7 +5,7 @@ public interface IResult<T> {
     /**
      * 将返回结果转字符串
      * @param obj
-     * @return
+     * @return 字符串
      */
     String returnString(Object obj);
 
@@ -13,7 +13,7 @@ public interface IResult<T> {
      * 将返回结果，包装成DTO
      * @param obj
      * @param <T>
-     * @return
+     * @return 实体
      */
     <T> T returnDto(Object obj);
 

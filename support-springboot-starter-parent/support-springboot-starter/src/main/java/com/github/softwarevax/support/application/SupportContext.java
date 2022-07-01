@@ -4,13 +4,6 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.util.Date;
 
-/**
- * @author twcao
- * @title: SupportContext
- * @projectName plugin-parent
- * @description: support上下文
- * @date 2022/6/30 14:15
- */
 public class SupportContext {
 
     /**

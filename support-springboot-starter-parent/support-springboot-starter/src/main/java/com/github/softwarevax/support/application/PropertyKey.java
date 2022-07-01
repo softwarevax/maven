@@ -1,12 +1,5 @@
 package com.github.softwarevax.support.application;
 
-/**
- * @author twcao
- * @title: Property
- * @projectName plugin-parent
- * @description: 属性键名
- * @date 2022/6/30 14:20
- */
 public interface PropertyKey {
 
     /**

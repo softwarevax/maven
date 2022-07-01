@@ -8,13 +8,6 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author twcao
- * @title: MethodConstant
- * @projectName plugin-parent
- * @description: 方法配置的常量
- * @date 2022/6/29 10:48
- */
 @ConfigurationProperties(prefix = "support.method")
 public class MethodConstant {
 

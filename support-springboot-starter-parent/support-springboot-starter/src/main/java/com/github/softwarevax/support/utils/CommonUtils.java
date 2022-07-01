@@ -3,13 +3,6 @@ package com.github.softwarevax.support.utils;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
-/**
- * @author twcao
- * @title: CommonUtils
- * @projectName plugin-parent
- * @description: 共用工具类
- * @date 2022/6/29 16:19
- */
 public class CommonUtils {
 
     public static String getMethodName(Method method) {

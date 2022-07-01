@@ -127,7 +127,7 @@ public class HttpServletUtils {
     /**
      * 获取所有的接口
      * @param ctx
-     * @return
+     * @return 所有接口
      */
     public static Map<String, WebInterface> getAllInterfaces(ApplicationContext ctx) {
         Map<String, WebInterface> map = new HashMap<>();

@@ -28,8 +28,8 @@ public class Context {
 
     /**
      * Gets value mapped to key, returning null if unmapped.
-     * @param key
-     * @return
+     * @param key 键
+     * @return boolean 类型value
      */
     public Boolean getBoolean(String key) {
         return getBoolean(key, null);
@@ -37,9 +37,9 @@ public class Context {
 
     /**
      * Gets value mapped to key, returning defaultValue if unmapped.
-     * @param key
-     * @param defaultValue
-     * @return
+     * @param key 键
+     * @param defaultValue 默认值
+     * @return 值
      */
     public Boolean getBoolean(String key, Boolean defaultValue) {
         if(this.parameters.containsKey(key)) {
@@ -50,8 +50,8 @@ public class Context {
 
     /**
      * Gets value mapped to key, returning null if unmapped.
-     * @param key
-     * @return
+     * @param key 键
+     * @return 值
      */
     public Integer getInteger(String key) {
         return getInteger(key, null);
@@ -59,9 +59,9 @@ public class Context {
 
     /**
      * Gets value mapped to key, returning defaultValue if unmapped.
-     * @param key
-     * @param defaultValue
-     * @return
+     * @param key 键
+     * @param defaultValue 默认值
+     * @return 值
      */
     public Integer getInteger(String key, Integer defaultValue) {
         if(this.parameters.containsKey(key)) {
@@ -76,8 +76,8 @@ public class Context {
 
     /**
      * Gets value mapped to key, returning null if unmapped.
-     * @param key
-     * @return
+     * @param key 键
+     * @return 值
      */
     public Long getLong(String key) {
         return getLong(key, null);
@@ -85,9 +85,9 @@ public class Context {
 
     /**
      * Gets value mapped to key, returning defaultValue if unmapped.
-     * @param key
-     * @param defaultValue
-     * @return
+     * @param key 键
+     * @param defaultValue 默认值
+     * @return 值
      */
     public Long getLong(String key, Long defaultValue) {
         if(this.parameters.containsKey(key)) {
@@ -106,7 +106,7 @@ public class Context {
 
     /**
      *  return parameters
-     * @return
+     * @return 所有键值对
      */
     public Map<String, Object> getParameters() {
         return this.parameters;
@@ -118,9 +118,9 @@ public class Context {
 
     /**
      * Gets value mapped to key, returning defaultValue if unmapped.
-     * @param key
-     * @param defaultValue
-     * @return
+     * @param key 键
+     * @param defaultValue 默认值
+     * @return 值
      */
     public String getString(String key, String defaultValue) {
         if(this.parameters.containsKey(key)) {
@@ -131,9 +131,9 @@ public class Context {
 
     /**
      * put a element to paramters
-     * @param key
-     * @param value
-     * @param override
+     * @param key 键
+     * @param value 键
+     * @param override 如果存在，是否覆盖
      */
     public void put(String key, Object value, boolean override) {
         if(override) {
@@ -143,8 +143,8 @@ public class Context {
 
     /**
      * put a element to paramters, override element
-     * @param key
-     * @param value
+     * @param key 键
+     * @param value 值
      */
     public void put(String key, Object value) {
         put(key, value, true);
@@ -152,7 +152,7 @@ public class Context {
 
     /**
      * put some parameters
-     * @param map
+     * @param map 批量存入
      */
     public void putAll(Map<String, Object> map) {
         this.parameters.putAll(map);
@@ -177,7 +177,7 @@ public class Context {
     }
     /**
      * toString
-     * @return
+     * @return 字符串
      */
     @Override
     public String toString() {

@@ -7,13 +7,6 @@ import java.io.ObjectOutputStream;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * @author twcao
- * @title: InvokeMethod
- * @projectName plugin-parent
- * @description: 调用的方法
- * @date 2022/6/29 14:44
- */
 public class InvokeMethod implements Cloneable {
 
     /**

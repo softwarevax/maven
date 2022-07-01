@@ -3,13 +3,6 @@ package com.github.softwarevax.support.method.bean;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 
-/**
- * @author twcao
- * @title: WebInterface
- * @projectName plugin-parent
- * @description: web接口
- * @date 2022/6/29 16:38
- */
 public class WebInterface {
 
     private RequestMappingInfo mapping;
