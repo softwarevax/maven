@@ -174,11 +174,6 @@ public class SupportHolder {
 
     /**
      * 动态注册bean，aspect无法被动态注册
-     * @param name
-     * @param clazz
-     * @param args
-     * @param <T>
-     * @return
      */
     public <T> T registerBean(String name, Class<T> clazz, Object ... args) {
         ConfigurableApplicationContext ctx = (ConfigurableApplicationContext) this.springCtx;

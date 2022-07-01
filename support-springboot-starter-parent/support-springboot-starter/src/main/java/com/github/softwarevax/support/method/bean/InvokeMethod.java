@@ -261,7 +261,7 @@ public class InvokeMethod implements Cloneable {
     /**
      * fullMethodName 可确定唯一方法
      * @param o
-     * @return
+     * @return 是否相等
      */
     @Override
     public boolean equals(Object o) {
