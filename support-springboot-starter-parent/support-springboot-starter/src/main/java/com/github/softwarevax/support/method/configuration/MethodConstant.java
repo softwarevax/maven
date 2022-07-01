@@ -4,6 +4,7 @@ import com.github.softwarevax.support.method.aspect.MethodInvokeNoticer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.Ordered;
 
+import java.lang.reflect.AnnotatedElement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,9 +45,15 @@ public class MethodConstant {
     private List<Class<? extends MethodInvokeNoticer>> noticers = new ArrayList<>();
 
     /**
-     * 是否持久化记录（方法，请求参数等数据）
+     * 是否持久化记录（方法，请求参数等数据, 开启后，由PersistenceMethodInvokeNoticer完成数据库入库操作）
      */
     private Boolean persistence = false;
+
+    /**
+     * methodTag字段的取值，取methodTag配置的注解的value, 若value为空，则取name,只有开启持久化，此配置才会生效
+     * 如配置注解：io.swagger.annotations.ApiOperation，可将注解的value或者name属性存入methodTag字段
+     */
+    private Class<AnnotatedElement> methodTag;
 
     public Boolean getEnable() {
         return enable;
@@ -86,5 +93,13 @@ public class MethodConstant {
 
     public void setOrder(int order) {
         this.order = order;
+    }
+
+    public Class<AnnotatedElement> getMethodTag() {
+        return methodTag;
+    }
+
+    public void setMethodTag(Class<AnnotatedElement> methodTag) {
+        this.methodTag = methodTag;
     }
 }

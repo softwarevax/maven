@@ -15,13 +15,14 @@ CREATE TABLE `t_method` (
     `launch_time` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '启动时间，格式：yyyyMMddHHmmss',
     `expose` tinyint(1) DEFAULT NULL COMMENT '是否是接口',
     `method` varchar(200) COLLATE utf8_bin DEFAULT NULL COMMENT '方法简称',
+    `method_tag` varchar(200) COLLATE utf8_bin DEFAULT NULL COMMENT '方法标记',
     `full_method_name` varchar(800) COLLATE utf8_bin DEFAULT NULL COMMENT '方法全称',
     `return_type` varchar(200) COLLATE utf8_bin DEFAULT NULL COMMENT '返回类型',
     `parameter` varchar(500) COLLATE utf8_bin DEFAULT NULL COMMENT '参数列表',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
     PRIMARY KEY (`id`),
     UNIQUE KEY `lanuch_method` (`launch_time`,`full_method_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用方法' COMMENT='应用方法';
+) ENGINE=InnoDB AUTO_INCREMENT=131 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用方法'
 
 CREATE TABLE `t_method_invoke` (
    `id` int(11) NOT NULL AUTO_INCREMENT,

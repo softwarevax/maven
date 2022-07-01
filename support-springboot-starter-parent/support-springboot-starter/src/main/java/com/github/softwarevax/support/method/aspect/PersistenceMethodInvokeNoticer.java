@@ -2,10 +2,13 @@ package com.github.softwarevax.support.method.aspect;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.github.softwarevax.support.application.PropertyKey;
+import com.github.softwarevax.support.application.SupportHolder;
 import com.github.softwarevax.support.method.MethodSQL;
 import com.github.softwarevax.support.method.bean.*;
+import com.github.softwarevax.support.method.configuration.MethodConstant;
+import com.github.softwarevax.support.utils.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,6 +17,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
 import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
 
+import java.lang.reflect.AnnotatedElement;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.Date;
@@ -50,6 +54,12 @@ public class PersistenceMethodInvokeNoticer implements MethodInvokeNoticer {
      */
     private MethodPo getMethodStaticInfo(InvokeMethod method) {
         MethodPo po = new MethodPo();
+        MethodConstant constant = SupportHolder.getInstance().get(PropertyKey.METHOD_CONSTANT);
+        Class<AnnotatedElement> methodTag = constant.getMethodTag();
+        if(method.getAnnotations().containsKey(methodTag)) {
+            Map<String, Object> annotationMap = method.getAnnotations().get(methodTag);
+            po.setMethodNTag(StringUtils.getFirstNotBlank(String.valueOf(annotationMap.get("value")), String.valueOf(annotationMap.get("name"))));
+        }
         po.setApplication(method.getApplication());
         po.setLaunchTime(method.getLaunchTime());
         po.setExpose(method.getExpose());
@@ -121,11 +131,12 @@ public class PersistenceMethodInvokeNoticer implements MethodInvokeNoticer {
             PreparedStatement ps = connection.prepareStatement(MethodSQL.INSERT_METHOD_SQL, Statement.RETURN_GENERATED_KEYS);
             ps.setObject(1, sqlArgs[0]);
             ps.setObject(2, sqlArgs[1]);
-            ps.setObject(3, sqlArgs[2]);
             ps.setObject(4, sqlArgs[3]);
+            ps.setObject(3, sqlArgs[2]);
             ps.setObject(5, sqlArgs[4]);
             ps.setObject(6, sqlArgs[5]);
             ps.setObject(7, sqlArgs[6]);
+            ps.setObject(8, sqlArgs[7]);
             return ps;
         }, keyHolder);
         po.setId(keyHolder.getKey().intValue());

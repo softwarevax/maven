@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -16,17 +17,27 @@ import java.util.Objects;
 public class InvokeMethod implements Cloneable {
 
     /**
-     * 应用名称
+     * 应用名称, 优先取值ApplicationContext.getApplicationName(),
+     * 若为空，则取值ApplicationContext.getId()
      */
     private String application;
 
     /**
-     * 会话id
+     * 应用的启动时间
+     */
+    private String launchTime;
+
+    /**
+     * HttpSession.Id：会话id，可能为空
      */
     private String sessionId;
 
     /**
-     * 调用id
+     * 调用id，雪花算法生成的id，用于标记一个调用链路
+     * 一次完成调用链路如下：
+     * controller -> service -> mapper →
+     *                                  ↓
+     * controller <- service <- mapper ←
      */
     private long invokeId;
 
@@ -59,18 +70,20 @@ public class InvokeMethod implements Cloneable {
     private String fullMethodName;
 
     /**
-     * 参数类型，多个之间都好分割
+     * 参数类型，多个之间都号分割
      * eg: java.lang.String,java.lang.String
      */
     private String arg;
 
     /**
-     * 参数名数组：[pageSize,pageNum]
+     * 参数名数组
+     * eg: [pageSize,pageNum]
      */
     private String[] args;
 
     /**
      * 参数值数组（参数类型列表，在fullMethodName中）
+     * 与args形成key: value键值对
      */
     private Object[] argsObj;
 
@@ -80,7 +93,7 @@ public class InvokeMethod implements Cloneable {
     private Object invokeObj;
 
     /**
-     * 开始时间
+     * 调用当前方法的开始时间：毫秒
      */
     private long startTime;
 
@@ -91,18 +104,22 @@ public class InvokeMethod implements Cloneable {
 
     /**
      * 接口，expose为true时，interfaces不为空
+     * 封装：RequestMappingInfo、HandlerMethod
      */
     private WebInterface interfaces;
 
     /**
-     * 接口调用
+     * 接口调用的一些动态参数，如：协议、远程ip和端口，请求方法
      */
     private MethodInterfaceInvoke interfaceInvoke;
 
     /**
-     * 启动时间
+     * 方法的注解，如果没有注解，此属性为空，结构如下：
+     * <注解类名，<注解属性名， 注解属性名对应的值>>
+     * eg：
+     * <PostMapping.class, <"name", ["/user/list", "/q2we13"]>>
      */
-    private String launchTime;
+    private Map<Class, Map<String, Object>> annotations;
 
     public String getApplication() {
         return application;
@@ -238,6 +255,14 @@ public class InvokeMethod implements Cloneable {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public Map<Class, Map<String, Object>> getAnnotations() {
+        return annotations;
+    }
+
+    public void setAnnotations(Map<Class, Map<String, Object>> annotations) {
+        this.annotations = annotations;
     }
 
     /**

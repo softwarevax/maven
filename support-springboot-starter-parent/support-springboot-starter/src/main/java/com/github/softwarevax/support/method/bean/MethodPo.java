@@ -14,6 +14,8 @@ public class MethodPo {
 
     private String method;
 
+    private String methodNTag;
+
     private String fullMethodName;
 
     private String returnType;
@@ -84,15 +86,24 @@ public class MethodPo {
         this.expose = expose;
     }
 
+    public String getMethodNTag() {
+        return methodNTag;
+    }
+
+    public void setMethodNTag(String methodNTag) {
+        this.methodNTag = methodNTag;
+    }
+
     public Object[] getSQLArgs() {
-        Object[] args = new Object[7];
+        Object[] args = new Object[8];
         args[0] = this.application;
         args[1] = this.launchTime;
         args[2] = this.expose;
         args[3] = this.method;
-        args[4] = this.fullMethodName;
-        args[5] = this.returnType;
-        args[6] = this.parameter;
+        args[4] = this.methodNTag;
+        args[5] = this.fullMethodName;
+        args[6] = this.returnType;
+        args[7] = this.parameter;
         return args;
     }
 

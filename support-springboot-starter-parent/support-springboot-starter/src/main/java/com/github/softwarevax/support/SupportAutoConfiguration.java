@@ -12,13 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -26,11 +23,9 @@ import org.springframework.util.Assert;
 
 @ComponentScan(basePackages = {"com.github.softwarevax.support"})
 @EnableConfigurationProperties(value = {SupportConstant.class, LockConstant.class, ResultConstant.class, PaginationConstant.class, MethodConstant.class})
-public class SupportAutoConfiguration implements ApplicationContextAware, ApplicationListener<ApplicationReadyEvent> {
+public class SupportAutoConfiguration implements ApplicationListener<ApplicationReadyEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(SupportAutoConfiguration.class);
-
-    private ApplicationContext ctx;
 
     @Autowired
     private SupportConstant supportConstant;
@@ -62,11 +57,6 @@ public class SupportAutoConfiguration implements ApplicationContextAware, Applic
         return advisor;
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        ctx = applicationContext;
-    }
-
     /**
      * 系统启动完成后，获取所有接口
      * @param event
@@ -82,5 +72,6 @@ public class SupportAutoConfiguration implements ApplicationContextAware, Applic
         holder.put(PropertyKey.RESULT_CONSTANT, resultConstant);
         holder.put(PropertyKey.PAGINATION_CONSTANT, paginationConstant);
         holder.initializeLoaded();
+        logger.info("[support]加载完成");
     }
 }

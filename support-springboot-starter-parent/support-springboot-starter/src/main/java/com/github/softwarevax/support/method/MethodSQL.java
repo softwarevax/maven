@@ -15,7 +15,7 @@ public interface MethodSQL {
     /**
      * 新增方法
      */
-    String INSERT_METHOD_SQL = "insert into t_method(application, launch_time, expose, method, full_method_name, return_type, parameter) values(?, ?, ?, ?, ?, ?, ?)";
+    String INSERT_METHOD_SQL = "insert into t_method(application, launch_time, expose, method, method_tag, full_method_name, return_type, parameter) values(?, ?, ?, ?, ?, ?, ?, ?)";
 
     /**
      * 新增方法接口

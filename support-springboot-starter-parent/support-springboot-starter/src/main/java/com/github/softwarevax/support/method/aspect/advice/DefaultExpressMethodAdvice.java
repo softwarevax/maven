@@ -17,10 +17,12 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -132,6 +134,8 @@ public class DefaultExpressMethodAdvice implements AbstractExpressMethodAdvice, 
     private InvokeMethod parseMethod(MethodInvocation invocation, Object ret) {
         InvokeMethod invokeMethod = new InvokeMethod();
         Method method = invocation.getMethod();
+        Map<Class, Map<String, Object>> methodAnnotation = getMethodAnnotation(method);
+        invokeMethod.setAnnotations(methodAnnotation);
         // 方法返回值
         String returnType = method.getReturnType().getCanonicalName();
         String fullMethodName = CommonUtils.getMethodName(method);
@@ -170,6 +174,21 @@ public class DefaultExpressMethodAdvice implements AbstractExpressMethodAdvice, 
         interfaceInvoke.setSchema(HttpServletUtils.getSchema());
         interfaceInvoke.setResponseStatus(HttpServletUtils.getResponseStatus());
         return interfaceInvoke;
+    }
+
+    /**
+     * 获取方法注解的属性
+     * @param method
+     * @return
+     */
+    private Map<Class, Map<String, Object>> getMethodAnnotation(Method method) {
+        Map<Class, Map<String, Object>> map = new HashMap<>();
+        Annotation[] annotations = AnnotationUtils.getAnnotations(method);
+        for(Annotation annotation : annotations) {
+            Map<String, Object> annotationAttributes = AnnotationUtils.getAnnotationAttributes(annotation);
+            map.put(annotation.annotationType(), annotationAttributes);
+        }
+        return map;
     }
 
     @Override
