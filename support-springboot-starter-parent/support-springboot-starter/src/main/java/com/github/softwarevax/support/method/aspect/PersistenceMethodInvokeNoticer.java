@@ -97,10 +97,21 @@ public class PersistenceMethodInvokeNoticer implements MethodInvokeNoticer {
         this.template = template;
     }
 
-    public boolean checkTable() {
+    public boolean checkTable(MethodConstant constant) {
         // 检查相关的表
         try {
-            template.execute(MethodSQL.CHECK_SQL);
+            // 检查
+            template.execute(MethodSQL.CHECK_METHOD_SQL);
+            template.execute(MethodSQL.CHECK_METHOD_INVOKE_SQL);
+            template.execute(MethodSQL.CHECK_METHOD_INTERFACE_SQL);
+            template.execute(MethodSQL.CHECK_METHOD_INTERFACE_INVOKE_SQL);
+            // 是否清空表
+            if(constant.getResetEveryTime()) {
+                template.execute(MethodSQL.TRUNCATE_METHOD_SQL);
+                template.execute(MethodSQL.TRUNCATE_METHOD_INVOKE_SQL);
+                template.execute(MethodSQL.TRUNCATE_METHOD_INTERFACE_SQL);
+                template.execute(MethodSQL.TRUNCATE_METHOD_INTERFACE_INVOKE_SQL);
+            }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return false;

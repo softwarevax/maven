@@ -28,7 +28,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> list() {
-        logger.info("list = {}", System.currentTimeMillis());
         return userMapper.list();
     }
 }

@@ -9,6 +9,7 @@ CREATE TABLE `distribute_lock`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
 -- method
+DROP TABLE IF EXISTS `t_method`;
 CREATE TABLE `t_method` (
     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
     `application` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '应用名spring.application.name, 如果没设置，则取contextPath',
@@ -22,8 +23,9 @@ CREATE TABLE `t_method` (
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
     PRIMARY KEY (`id`),
     UNIQUE KEY `lanuch_method` (`launch_time`,`full_method_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=131 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用方法'
+) ENGINE=InnoDB AUTO_INCREMENT=131 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用方法';
 
+DROP TABLE IF EXISTS `t_method_invoke`;
 CREATE TABLE `t_method_invoke` (
    `id` int(11) NOT NULL AUTO_INCREMENT,
    `session_id` varchar(40) COLLATE utf8_bin DEFAULT NULL COMMENT '会话id',
@@ -38,6 +40,7 @@ CREATE TABLE `t_method_invoke` (
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用方法调用';
 
+DROP TABLE IF EXISTS `t_method_interface`;
 CREATE TABLE `t_method_interface` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `method_id` int(11) DEFAULT NULL COMMENT '方法id',
@@ -47,6 +50,7 @@ CREATE TABLE `t_method_interface` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用接口方法';
 
+DROP TABLE IF EXISTS `t_method_interface_invoke`;
 CREATE TABLE `t_method_interface_invoke` (
  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
  `invoke_id` int(11) DEFAULT NULL COMMENT 't_method_invoke.id',

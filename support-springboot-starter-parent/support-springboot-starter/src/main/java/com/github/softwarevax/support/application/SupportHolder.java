@@ -166,6 +166,7 @@ public class SupportHolder {
         if(constant.getPersistence()) {
             PersistenceMethodInvokeNoticer noticer = new PersistenceMethodInvokeNoticer();
             noticer.setTemplate(springCtx.getBean(JdbcTemplate.class));
+            noticer.checkTable(constant);
             noticers.add(noticer);
         }
         defaultAdvice.addNoticers(noticers);

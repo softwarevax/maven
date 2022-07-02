@@ -10,7 +10,24 @@ public interface MethodSQL {
     /**
      * 检查表是否存在
      */
-    String CHECK_SQL = "select 1 from t_method where 1 = 0";
+    String CHECK_METHOD_SQL = "select 1 from t_method where 1 = 0";
+
+    String CHECK_METHOD_INTERFACE_SQL = "select 1 from t_method_interface where 1 = 0";
+
+    String CHECK_METHOD_INVOKE_SQL = "select 1 from t_method_invoke where 1 = 0";
+
+    String CHECK_METHOD_INTERFACE_INVOKE_SQL = "select 1 from t_method_interface_invoke where 1 = 0";
+
+    /**
+     * 清空表
+     */
+    String TRUNCATE_METHOD_SQL = "truncate table t_method";
+
+    String TRUNCATE_METHOD_INTERFACE_SQL = "truncate table t_method_interface";
+
+    String TRUNCATE_METHOD_INVOKE_SQL = "truncate table t_method_invoke";
+
+    String TRUNCATE_METHOD_INTERFACE_INVOKE_SQL = "truncate table t_method_interface_invoke";
 
     /**
      * 新增方法

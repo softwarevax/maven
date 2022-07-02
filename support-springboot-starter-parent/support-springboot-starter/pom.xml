@@ -6,13 +6,14 @@
 	<groupId>com.github.softwarevax</groupId>
 	<artifactId>support-springboot-starter</artifactId>
 	<version>0.0.1.RELEASE</version>
-
 	<name>support-springboot-starter</name>
+	<description>some support tool for springboot project</description>
 
-	<description>Demo project for Spring Boot</description>
+	<url>https://github.com/softwarevax/maven</url>
 
 	<properties>
 		<java.version>1.8</java.version>
+		<!-- maven 设置jdk版本 -->
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <springProperty scope="context" name="application" source="spring.application.name"/>
+    <property name="logPath" value="/disk1/log/${application}" />
+
+    <!-- 输出到控制台 %m输出的信息,%p日志级别,%t线程名,%d日期,%c类的全名(%c{1}类简称),%i索引【从数字0开始递增】 -->
+    <appender name="CONSOLE-LOG" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%boldYellow([%d{yyyy-MM-dd' 'HH:mm:ss}]) %white([%X{X-B3-TraceId:-},%X{X-B3-ParentSpanId:-},%X{X-B3-SpanId:-}]) %boldMagenta([%c{1}]) %cyan([%t]) %highlight([%-5p]) %green(%m%n)</pattern>
+        </layout>
+    </appender>
+
+    <appender name="DEBUG-LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 指定过滤策略 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <!-- 指定日志输出格式 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{X-B3-TraceId:-},%X{X-B3-ParentSpanId:-},%X{X-B3-SpanId:-}] [%c] [%t] [%-5p] %m%n</pattern>
+        </encoder>
+        <!-- 指定收集策略：滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 指定生成日志保存地址 -->
+            <fileNamePattern>${logPath}/debug/%d-%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <maxFileSize>100MB</maxFileSize>
+            <!-- 日志最多10GB -->
+            <totalSizeCap>10GB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 获取比info级别高(包括info级别)但除error级别的日志 -->
+    <appender name="INFO-LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 指定过滤策略 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <!-- 指定日志输出格式 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{X-B3-TraceId:-},%X{X-B3-ParentSpanId:-},%X{X-B3-SpanId:-}] [%c] [%t] [%-5p] %m%n</pattern>
+        </encoder>
+        <!-- 指定收集策略：滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 指定生成日志保存地址 -->
+            <fileNamePattern>${logPath}/info/%d-%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <maxFileSize>100MB</maxFileSize>
+            <!-- 日志最多10GB -->
+            <totalSizeCap>10GB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 只要警告级别的日志 -->
+    <appender name="WARN-LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 指定过滤策略 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <!-- 指定日志输出格式 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{X-B3-TraceId:-},%X{X-B3-ParentSpanId:-},%X{X-B3-SpanId:-}] [%c] [%t] [%-5p] %m%n</pattern>
+        </encoder>
+        <!-- 指定收集策略：滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 指定生成日志保存地址 -->
+            <fileNamePattern>${logPath}/warn/%d-%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <maxFileSize>100MB</maxFileSize>
+            <!-- 日志最多10GB -->
+            <totalSizeCap>10GB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="ERROR-LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 指定过滤策略 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <!-- 指定日志输出格式 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{X-B3-TraceId:-},%X{X-B3-ParentSpanId:-},%X{X-B3-SpanId:-}] [%c] [%t] [%-5p] %m%n</pattern>
+        </encoder>
+        <!-- 指定收集策略：滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--指定生成日志保存地址 -->
+            <fileNamePattern>${logPath}/error/%d-%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <maxFileSize>100MB</maxFileSize>
+            <!-- 日志最多10GB -->
+            <totalSizeCap>10GB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="ASYNC-DEBUG" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="DEBUG-LOG"/>
+    </appender>
+
+    <appender name="ASYNC-INFO" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="INFO-LOG"/>
+    </appender>
+
+    <appender name="ASYNC-ERROR" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="ERROR-LOG"/>
+    </appender>
+
+    <appender name="ASYNC-WARN" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="WARN-LOG"/>
+    </appender>
+
+    <appender name="ASYNC-CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="CONSOLE-LOG"/>
+    </appender>
+
+    <!-- 指定最基础的日志输出级别 -->
+    <root level="info">
+        <appender-ref ref="ASYNC-DEBUG" />
+        <appender-ref ref="ASYNC-ERROR" />
+        <appender-ref ref="ASYNC-INFO" />
+        <appender-ref ref="ASYNC-WARN" />
+        <appender-ref ref="ASYNC-CONSOLE" />
+    </root>
+</configuration>

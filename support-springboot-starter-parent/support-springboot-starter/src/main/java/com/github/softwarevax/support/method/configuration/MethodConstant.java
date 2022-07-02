@@ -43,6 +43,11 @@ public class MethodConstant {
     private Boolean persistence = false;
 
     /**
+     * 每次都重置表数据，默认false
+     */
+    private Boolean resetEveryTime = false;
+
+    /**
      * methodTag字段的取值，取methodTag配置的注解的value, 若value为空，则取name,只有开启持久化，此配置才会生效
      * 如配置注解：io.swagger.annotations.ApiOperation，可将注解的value或者name属性存入methodTag字段
      */
@@ -94,5 +99,13 @@ public class MethodConstant {
 
     public void setMethodTag(Class<AnnotatedElement> methodTag) {
         this.methodTag = methodTag;
+    }
+
+    public Boolean getResetEveryTime() {
+        return resetEveryTime;
+    }
+
+    public void setResetEveryTime(Boolean resetEveryTime) {
+        this.resetEveryTime = resetEveryTime;
     }
 }
