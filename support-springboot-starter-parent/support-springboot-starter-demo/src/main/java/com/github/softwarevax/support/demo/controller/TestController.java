@@ -107,7 +107,7 @@ public class TestController {
     @Pagination
     @ResponseBody
     @ApiOperation("用户列表查询")
-    @PostMapping({"/user/list", "/q2we13"})
+    @PostMapping("/user/list")
     public PageInfo<User> queryList(String pageSize, String pageNum, User user) {
         List<User> list = userService.list();
         return new PageInfo<>(list);

@@ -23,6 +23,8 @@ import java.sql.Statement;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class PersistenceMethodInvokeNoticer implements MethodInvokeNoticer {
@@ -33,18 +35,32 @@ public class PersistenceMethodInvokeNoticer implements MethodInvokeNoticer {
 
     private JdbcTemplate template;
 
+    private Lock lock = new ReentrantLock();
+
     @Override
     public void callBack(InvokeMethod method) {
         Assert.notNull(template, "JdbcTemplate获取失败");
         MethodPo staticInfo = getMethodStaticInfo(method);
+        alreadyIn:
         if(!methodMaps.containsKey(staticInfo.getFullMethodName())) {
+            // 若此时两个线程(相同方法,launch_time + full_method_name相等)同时进入
+            lock.lock();
+            try {
+                // thread2:后进入的线程发现map中已经包含了此方法，则跳出去
+                if(methodMaps.containsKey(staticInfo.getFullMethodName())) {
+                   break alreadyIn;
+                }
+                // thread1:先进入的线程将方法信息放入map，并完成数据库插入操作
+                methodMaps.put(staticInfo.getFullMethodName(), staticInfo);
+            } finally {
+                lock.unlock();
+            }
             insertMethod(staticInfo);
             insertMethodInterface(method, staticInfo.getId());
-            methodMaps.put(staticInfo.getFullMethodName(), staticInfo);
         }
         DynamicInfoMethod methodDynamicInfo = getMethodDynamicInfo(method);
         insertMethodInvoke(methodDynamicInfo);
-        insertMethodInterfaceInvoke(method, methodDynamicInfo.getId());;
+        insertMethodInterfaceInvoke(method, methodDynamicInfo.getId());
     }
 
     /**

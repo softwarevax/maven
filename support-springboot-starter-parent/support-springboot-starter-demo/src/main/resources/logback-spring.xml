@@ -6,7 +6,7 @@
     <!-- 输出到控制台 %m输出的信息,%p日志级别,%t线程名,%d日期,%c类的全名(%c{1}类简称),%i索引【从数字0开始递增】 -->
     <appender name="CONSOLE-LOG" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%boldYellow([%d{yyyy-MM-dd' 'HH:mm:ss}]) %white([%X{X-B3-TraceId:-},%X{X-B3-ParentSpanId:-},%X{X-B3-SpanId:-}]) %boldMagenta([%c{1}]) %cyan([%t]) %highlight([%-5p]) %green(%m%n)</pattern>
+            <pattern>%boldYellow([%d{yyyy-MM-dd' 'HH:mm:ss}]) %boldMagenta([%c{1}]) %cyan([%t]) %highlight([%-5p]) %green(%m%n)</pattern>
         </layout>
     </appender>
 
@@ -19,7 +19,7 @@
         </filter>
         <encoder>
             <!-- 指定日志输出格式 -->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{X-B3-TraceId:-},%X{X-B3-ParentSpanId:-},%X{X-B3-SpanId:-}] [%c] [%t] [%-5p] %m%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%c] [%t] [%-5p] %m%n</pattern>
         </encoder>
         <!-- 指定收集策略：滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -43,7 +43,7 @@
         </filter>
         <encoder>
             <!-- 指定日志输出格式 -->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{X-B3-TraceId:-},%X{X-B3-ParentSpanId:-},%X{X-B3-SpanId:-}] [%c] [%t] [%-5p] %m%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%c] [%t] [%-5p] %m%n</pattern>
         </encoder>
         <!-- 指定收集策略：滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -67,7 +67,7 @@
         </filter>
         <encoder>
             <!-- 指定日志输出格式 -->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{X-B3-TraceId:-},%X{X-B3-ParentSpanId:-},%X{X-B3-SpanId:-}] [%c] [%t] [%-5p] %m%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%c] [%t] [%-5p] %m%n</pattern>
         </encoder>
         <!-- 指定收集策略：滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -88,7 +88,7 @@
         </filter>
         <encoder>
             <!-- 指定日志输出格式 -->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{X-B3-TraceId:-},%X{X-B3-ParentSpanId:-},%X{X-B3-SpanId:-}] [%c] [%t] [%-5p] %m%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%c] [%t] [%-5p] %m%n</pattern>
         </encoder>
         <!-- 指定收集策略：滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">

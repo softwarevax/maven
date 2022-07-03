@@ -90,13 +90,15 @@ public class DefaultExpressMethodAdvice implements AbstractExpressMethodAdvice, 
         // 运行时长，单位毫秒
         Assert.notNull(this.executor, "线程池未成功初始化");
         InvokeStackInfo invokeStackInfo = invoke.get();
+        // 避免放在线程池中等待的时间，计算到运行时间中
+        long elapsedTime = watch.getTime();
         executor.execute(() -> {
             // 提取方法中的数据
             InvokeMethod invokeMethod = parseMethod(invocation, invokeStackInfo.getReturnObj());
             invokeMethod.setStartTime(watch.getStartTime());
             invokeMethod.setInvokeId(invokeStackInfo.getInvokeId());
             invokeMethod.setSessionId(invokeStackInfo.getSessionId());
-            invokeMethod.setElapsedTime(watch.getTime());
+            invokeMethod.setElapsedTime(elapsedTime);
             invokeMethod.setInterfaceInvoke(invokeStackInfo.getInterfaceInvoke());
             noticers.stream().forEach(row -> row.callBack(invokeMethod));
         });
