@@ -9,6 +9,7 @@
 	<name>support-springboot-starter</name>
 	<description>some support tool for springboot project</description>
 
+	<!-- 这一行不能少，否则提示Pom URL missing -->
 	<url>https://github.com/softwarevax/maven</url>
 
 	<properties>
