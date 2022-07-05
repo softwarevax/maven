@@ -27,6 +27,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
+/**
+ * 1、待完成：插入语句需要批量操作，以提高效率，id需要程序生成，因为有联表数据
+ */
 public class PersistenceMethodInvokeNoticer implements MethodInvokeNoticer {
 
     private Logger logger = LoggerFactory.getLogger(PersistenceMethodInvokeNoticer.class);
@@ -66,7 +69,7 @@ public class PersistenceMethodInvokeNoticer implements MethodInvokeNoticer {
     /**
      * 获取方法的静态信息
      * @param method
-     * @return
+     * @return 方法详情
      */
     private MethodPo getMethodStaticInfo(InvokeMethod method) {
         MethodPo po = new MethodPo();
@@ -139,7 +142,7 @@ public class PersistenceMethodInvokeNoticer implements MethodInvokeNoticer {
      * 序列化参数
      * @param argNames
      * @param argValues
-     * @return
+     * @return 参数
      */
     private String getParameter(String[] argNames, Object[] argValues) {
         JSONObject obj = new JSONObject();
