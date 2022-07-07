@@ -4,7 +4,9 @@ package com.github.softwarevax.support.result;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 
-public class ResultDto<T> implements IResult<ResultDto> {
+import java.util.LinkedHashMap;
+
+public class ResultDto<T> implements IResult {
 
     @Override
     public String returnString(Object obj) {
@@ -189,4 +191,10 @@ public class ResultDto<T> implements IResult<ResultDto> {
         return JSON.toJSONString(this);
     }
 
+    @Override
+    public <T> T error(LinkedHashMap<String, Object> map) {
+        ResultDto error = IResult.super.error(map);
+        error.setFlag(false);
+        return (T) error;
+    }
 }

@@ -3,6 +3,7 @@ package com.github.softwarevax.support.result.aspect;
 import com.github.softwarevax.support.result.IResult;
 import com.github.softwarevax.support.result.annotation.IgnoreResultWrapper;
 import com.github.softwarevax.support.result.configuration.ResultConstant;
+import com.github.softwarevax.support.utils.HttpServletUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.LinkedHashMap;
 
 @RestControllerAdvice
 @ConditionalOnProperty(name = "support.result.enable", havingValue = "true")
@@ -39,7 +41,10 @@ public class ResultAspect implements ResponseBodyAdvice<Object> {
         if (o instanceof String) {
             // String要特殊处理
             return result.returnString(o);
-        } else if (IResult.class.isAssignableFrom(constant.getWrapperImpl())) {
+        } else if(o.getClass() == LinkedHashMap.class && HttpServletUtils.getResponseStatus() >= 500) {
+            // 异常时的处理，返回时出错，说明客户端请求正常，不会是4xx
+            result.error((LinkedHashMap) o);
+        } else if (IResult.class.isAssignableFrom(o.getClass())) {
             //如果是实现IResult的实体，则直接返回
             return o;
         }

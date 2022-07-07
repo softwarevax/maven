@@ -1,6 +1,8 @@
 package com.github.softwarevax.support.result;
 
-public interface IResult<T> {
+import java.util.LinkedHashMap;
+
+public interface IResult {
 
     /**
      * 将返回结果转字符串
@@ -17,4 +19,13 @@ public interface IResult<T> {
      */
     <T> T returnDto(Object obj);
 
+    /**
+     * 异常处理
+     * @param map 系统返回的异常
+     * @param <T> dto包装实体
+     * @return 系统返回的异常包装实体
+     */
+    default <T> T error(LinkedHashMap<String, Object> map) {
+        return returnDto(map);
+    }
 }
