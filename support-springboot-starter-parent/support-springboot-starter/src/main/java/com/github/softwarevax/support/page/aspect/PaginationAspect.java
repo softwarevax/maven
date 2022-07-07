@@ -128,6 +128,9 @@ public class PaginationAspect implements SmartInitializingSingleton {
         String method = HttpServletUtils.getMethod();
         if("POST".equals(method)) {
             MediaType contentType = HttpServletUtils.getRequestContentType();
+            if(contentType == null) {
+                return false;
+            }
             if(!contentType.equals(MediaType.APPLICATION_FORM_URLENCODED) && !contentType.equals(MediaType.APPLICATION_JSON)) {
                 return false;
             }

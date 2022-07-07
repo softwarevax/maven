@@ -7,7 +7,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -51,7 +50,7 @@ public class HttpServletUtils {
 
     public static MediaType getRequestContentType() {
         HttpServletRequest request = getRequest();
-        return MediaType.valueOf(request.getContentType());
+        return request.getContentType() == null ? null : MediaType.valueOf(request.getContentType());
     }
 
     public static Map<String, String> getParameter() {
