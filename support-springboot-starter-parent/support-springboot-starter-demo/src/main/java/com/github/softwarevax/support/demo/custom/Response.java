@@ -3,7 +3,7 @@ package com.github.softwarevax.support.demo.custom;
 import com.alibaba.fastjson.JSON;
 import com.github.softwarevax.support.result.IResult;
 
-public class Response<T> implements IResult<Response> {
+public class Response<T> implements IResult {
 
     private T data;
 

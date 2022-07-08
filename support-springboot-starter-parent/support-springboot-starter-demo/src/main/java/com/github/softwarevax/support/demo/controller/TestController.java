@@ -6,10 +6,12 @@ import com.github.softwarevax.support.demo.entity.User;
 import com.github.softwarevax.support.demo.service.UserService;
 import com.github.softwarevax.support.page.Pagination;
 import com.github.softwarevax.support.result.ResultDto;
+import com.github.softwarevax.support.result.annotation.IgnoreResultWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +55,7 @@ public class TestController {
      * @return
      */
     @ResponseBody
+    @IgnoreResultWrapper
     @GetMapping("/object/hello")
     public User object() {
         User user = new User();
@@ -100,15 +103,15 @@ public class TestController {
         user.setId("id");
         user.setUserName("object");
         user.setSex("man");
-        int a = 1 / 0;
+        Assert.isTrue(1 == 0, "1不等于0");
         return user;
     }
 
-    @Pagination
+    @Pagination(skipIfMissing = true)
     @ResponseBody
     @ApiOperation("用户列表查询")
     @PostMapping("/user/list")
-    public PageInfo<User> queryList(String pageSize, String pageNum, User user) {
+    public PageInfo<User> queryList(User user) {
         List<User> list = userService.list();
         return new PageInfo<>(list);
     }
