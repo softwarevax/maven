@@ -5,7 +5,7 @@
 
 	<groupId>com.github.softwarevax</groupId>
 	<artifactId>starter-dictionary-mybatis</artifactId>
-	<version>0.0.3.RELEASE</version>
+	<version>0.0.4.RELEASE</version>
 
 	<name>starter-dictionary-mybatis</name>
 	<description>Integrated dictionary plugin in springboot project</description>
@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>com.github.softwarevax</groupId>
 			<artifactId>dictionary-core</artifactId>
-			<version>0.0.3.RELEASE</version>
+			<version>0.0.4.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
