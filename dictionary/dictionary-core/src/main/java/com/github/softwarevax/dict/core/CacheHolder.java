@@ -7,6 +7,7 @@ import com.github.softwarevax.dict.core.interfaces.DictionaryValueComparator;
 import com.github.softwarevax.dict.core.interfaces.DictionaryValueParser;
 import com.github.softwarevax.dict.core.utils.*;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
@@ -113,8 +114,10 @@ public class CacheHolder {
             if(dictVal == null) {
                 continue;
             }
+            // 目标字段
+            Field targetField = FieldUtils.getField(field.getObj().getClass(), propertyName, true);
             // 将对象field.getObj()的属性propertyName设置为dictVal
-            Object parserVal = valueParser.parse(dictVal, field.getField().getType());
+            Object parserVal = valueParser.parse(dictVal, targetField.getType());
             BeanUtils.set(field.getObj(), propertyName, parserVal);
         }
         resolveField.clear();
