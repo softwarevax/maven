@@ -13,6 +13,7 @@ import com.github.softwarevax.support.utils.HttpServletUtils;
 import com.github.softwarevax.support.utils.IdWorker;
 import com.github.softwarevax.support.utils.StringUtils;
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class DefaultExpressMethodAdvice implements AbstractExpressMethodAdvice, ThreadPoolDemander {
 
@@ -149,7 +152,18 @@ public class DefaultExpressMethodAdvice implements AbstractExpressMethodAdvice, 
             invokeMethod.setInterfaces(interfaces.get(fullMethodName));
         }
         String argument = StringUtils.substring(fullMethodName, StringUtils.indexOf(fullMethodName, "(") + 1, StringUtils.indexOf(fullMethodName, (")")));
-        invokeMethod.setArgs(parameterNameDiscover.getParameterNames(method));
+        if(method.getDeclaringClass().isInterface()) {
+            Parameter[] parameters = method.getParameters();
+            String[] args = Arrays.asList(parameters).stream().map(Parameter::getName).toArray(String[]::new);
+            invokeMethod.setArgs(args);
+        } else {
+            invokeMethod.setArgs(parameterNameDiscover.getParameterNames(method));
+        }
+        if(ArrayUtils.getLength(invokeMethod.getArgs()) == 0) {
+            int length = invocation.getArguments().length;
+            String[] args = Stream.iterate(0, i -> i + 1).limit(length).map(i -> String.valueOf(i)).toArray(String[]::new);
+            invokeMethod.setArgs(args);
+        }
         invokeMethod.setArg(argument);
         invokeMethod.setMethodName(method.getName());
         invokeMethod.setFullMethodName(fullMethodName);
