@@ -50,4 +50,15 @@ public class StringUtils {
         }
         return str1.equals(str2);
     }
+
+    public static String join(CharSequence cs, String ... str) {
+        StringBuffer sb = new StringBuffer();
+        int idx = 0;
+        for (String s : str) {
+            sb.append(s);
+            idx = sb.length();
+            sb.append(cs);
+        }
+        return sb.toString().substring(0, idx);
+    }
 }

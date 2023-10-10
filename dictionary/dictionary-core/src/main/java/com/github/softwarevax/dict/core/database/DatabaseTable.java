@@ -45,4 +45,9 @@ public class DatabaseTable extends AbstractDbTable {
         result = 31 * result + Arrays.hashCode(conditions);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return dbType.name().toLowerCase() + ":" + tableName;
+    }
 }

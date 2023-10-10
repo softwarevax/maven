@@ -1,6 +1,6 @@
 package com.github.softwarevax.dict.core.interfaces;
 
-public interface DictionaryValueParser {
+public interface ValueParser {
 
     /**
      * 字典值的转换

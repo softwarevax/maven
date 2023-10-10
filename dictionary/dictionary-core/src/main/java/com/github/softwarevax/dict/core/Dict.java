@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Dictionary {
+public @interface Dict {
 
     /**
      * 表名

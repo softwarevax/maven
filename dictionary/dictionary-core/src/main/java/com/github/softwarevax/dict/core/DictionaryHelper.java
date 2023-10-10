@@ -1,11 +1,18 @@
 package com.github.softwarevax.dict.core;
 
 
+import com.github.softwarevax.dict.core.cache.DictionaryCache;
+import com.github.softwarevax.dict.core.cache.ICache;
+import com.github.softwarevax.dict.core.cache.LinkedHashMapCache;
+import com.github.softwarevax.dict.core.cache.RedisCache;
 import com.github.softwarevax.dict.core.domain.DictionaryConfigure;
 import com.github.softwarevax.dict.core.event.DictionaryEvent;
 import com.github.softwarevax.dict.core.event.DictionaryEventType;
 import com.github.softwarevax.dict.core.interfaces.DictionaryLoader;
 import com.github.softwarevax.dict.core.interfaces.DictionaryTable;
+import com.github.softwarevax.dict.core.redis.RedisServiceImpl;
+import com.github.softwarevax.dict.core.utils.Assert;
+import com.github.softwarevax.dict.core.utils.BeanUtils;
 import com.github.softwarevax.dict.core.utils.ListUtils;
 
 import java.util.*;
@@ -51,7 +58,7 @@ public class DictionaryHelper {
     /**
      * 缓存
      */
-    private static CacheHolder cacheHolder;
+    private static ICache cache;
 
     /**
      * 设置配置信息
@@ -60,7 +67,11 @@ public class DictionaryHelper {
     public static void configure(DictionaryConfigure configure) {
         DictionaryHelper.configure = configure;
         logger.info("dictionary configure = " + configure.toString());
-        cacheHolder = new CacheHolder(configure.getComparator(), configure.getValueParser());
+        cache = getDictionaryCache(configure.getCache());
+        cache.initialize();
+        Assert.isTrue(!configure.getComparator().isInterface(), "comparator不能是接口");
+        cache.setComparator(BeanUtils.newInstance(configure.getComparator()));
+        cache.setValueParser(BeanUtils.newInstance(configure.getValueParser()));
         if(!configure.isRefreshEveryTime()) {
             // 定时刷新缓存
             timer.schedule(new TimerTask() {
@@ -85,23 +96,23 @@ public class DictionaryHelper {
      */
     public static void reLoad() {
         logger.info("dictionary reload");
-        notify(events, cacheHolder.cache, DictionaryEventType.BEFORE_REFRESH);
-        cacheHolder.clear();
+        notify(events, cache.getCache(), DictionaryEventType.BEFORE_REFRESH);
+        cache.clear();
         for(DictionaryLoader loader : dictLoaders) {
             Map<DictionaryTable, List<Map<String, Object>>> loaderCache = loader.reload();
-            cacheHolder.putAll(loaderCache);
+            cache.putAll(loaderCache);
         }
-        notify(events, cacheHolder.cache, DictionaryEventType.AFTER_REFRESH);
+        notify(events, cache.getCache(), DictionaryEventType.AFTER_REFRESH);
     }
 
     public static void resultWrapper(List<Object> result) {
-        if(cacheHolder.size() == 0 || configure.isRefreshEveryTime()) {
+        if(cache.size() == 0 || configure.isRefreshEveryTime()) {
             // 加载缓存
             reLoad();
         }
-        notify(events, cacheHolder.cache, DictionaryEventType.BEFORE_INVOKE);
-        cacheHolder.handleData(result);
-        notify(events, cacheHolder.cache, DictionaryEventType.AFTER_INVOKE);
+        notify(events, cache.getCache(), DictionaryEventType.BEFORE_INVOKE);
+        cache.handleData(result);
+        notify(events, cache.getCache(), DictionaryEventType.AFTER_INVOKE);
     }
 
     public static void addListener(DictionaryEvent event) {
@@ -128,6 +139,16 @@ public class DictionaryHelper {
                 continue;
             }
             event.callBack(obj);
+        }
+    }
+
+    private static ICache getDictionaryCache(DictionaryCache cache) {
+        switch (cache.getType()) {
+            case REDIS:
+                return new RedisCache(new RedisServiceImpl(cache.getRedis()));
+            case MEMORY:
+            default:
+                return new LinkedHashMapCache();
         }
     }
 }

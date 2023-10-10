@@ -1,4 +1,4 @@
-package com.github.softwarevax.dict.core;
+package com.github.softwarevax.dict.core.cache;
 
 import com.github.softwarevax.dict.core.enums.DictField;
 import com.github.softwarevax.dict.core.enums.DictFieldType;

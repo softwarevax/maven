@@ -1,8 +1,8 @@
 package com.github.softwarevax.dict.starter.mybatis.custom;
 
-import com.github.softwarevax.dict.core.interfaces.DictionaryValueComparator;
+import com.github.softwarevax.dict.core.interfaces.Comparator;
 
-public class CustomDictionaryValueComparator implements DictionaryValueComparator {
+public class CustomComparator implements Comparator {
 
     @Override
     public boolean compare(Object dictValue, Object dbValue) {

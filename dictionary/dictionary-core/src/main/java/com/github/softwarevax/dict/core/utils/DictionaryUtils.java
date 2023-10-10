@@ -1,6 +1,6 @@
 package com.github.softwarevax.dict.core.utils;
 
-import com.github.softwarevax.dict.core.Dictionary;
+import com.github.softwarevax.dict.core.Dict;
 import com.github.softwarevax.dict.core.DictionaryHelper;
 import com.github.softwarevax.dict.core.domain.DictionaryEntity;
 
@@ -41,7 +41,7 @@ public class DictionaryUtils {
      * @return 属性上注解的相关值
      */
     public static DictionaryEntity extractDictionaryAnnotation(Field field) {
-        Dictionary dictionary = field.getAnnotation(Dictionary.class);
+        Dict dictionary = field.getAnnotation(Dict.class);
         if(dictionary == null) {
             return null;
         }

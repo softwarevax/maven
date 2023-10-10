@@ -1,6 +1,6 @@
 package com.github.softwarevax.dict.starter.mybatis.domain;
 
-import com.github.softwarevax.dict.core.Dictionary;
+import com.github.softwarevax.dict.core.Dict;
 import lombok.Data;
 
 /**
@@ -23,11 +23,11 @@ public class User {
     /**
      * 状态
      */
-    @Dictionary(table = "sys_config", property = "stateLabel", column = "label", value = "value", conditions = {"type = user_state"})
+    @Dict(table = "sys_config", property = "stateLabel", column = "label", value = "value", conditions = {"type = user_state"})
     private String state;
 
     private String stateLabel;
 
-    @Dictionary
+    @Dict
     private String sex;
 }

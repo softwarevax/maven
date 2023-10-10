@@ -1,98 +1,35 @@
-package com.github.softwarevax.dict.core;
+package com.github.softwarevax.dict.core.cache;
 
+import com.github.softwarevax.dict.core.Dict;
 import com.github.softwarevax.dict.core.domain.DictionaryEntity;
 import com.github.softwarevax.dict.core.enums.DictField;
+import com.github.softwarevax.dict.core.interfaces.Comparator;
 import com.github.softwarevax.dict.core.interfaces.DictionaryTable;
-import com.github.softwarevax.dict.core.interfaces.DictionaryValueComparator;
-import com.github.softwarevax.dict.core.interfaces.DictionaryValueParser;
+import com.github.softwarevax.dict.core.interfaces.ValueParser;
 import com.github.softwarevax.dict.core.utils.*;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
-/**
- * @author ctw
- * 缓存
- * 2020/11/22 13:19
- */
-public class CacheHolder {
+public abstract class AbstractCache implements ICache {
 
-    public static final Logger logger = Logger.getLogger(CacheHolder.class.getName());
-
-    /**
-     * 字典缓存
-     */
-    Map<DictionaryTable, List<Map<String, Object>>> cache = new LinkedHashMap<>();
+    public static final Logger logger = Logger.getLogger(AbstractCache.class.getName());
 
     /**
      * 缓存解析器
      */
-    private CacheResolver resolver = new CacheResolver(Dictionary.class);
+    protected CacheResolver resolver = new CacheResolver(Dict.class);
 
-    /**
-     * 安全锁
-     */
-    private ReentrantLock lock = new ReentrantLock();
+    protected Comparator comparator;
 
-    /**
-     * 比较器，匹配业务表和字典表值，可自定义
-     */
-    private DictionaryValueComparator comparator;
-
-    /**
-     * 转换器，将字典中的字段与属性中的字段匹配
-     * 解决问题：典类型是Integer类型，反显后的值是String,那么类型转化失败
-     */
-    private DictionaryValueParser valueParser;
-
-    public CacheHolder(Class<? extends DictionaryValueComparator> comparator, Class<? extends DictionaryValueParser> valueParser) {
-        Assert.isTrue(!comparator.isInterface(), "comparator不能是接口");
-        this.comparator = BeanUtils.newInstance(comparator);
-        this.valueParser = BeanUtils.newInstance(valueParser);
-    }
-
-    public void put(DictionaryTable table, List<Map<String, Object>> value) {
-        try {
-            lock.lock();
-            cache.put(table, value);
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public void putAll(Map<DictionaryTable, List<Map<String, Object>>> cacheMap) {
-        try {
-            lock.lock();
-            cache.putAll(cacheMap);
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public void remove(Map<DictionaryTable, List<Map<String, Object>>> cacheMap) {
-        try {
-            lock.lock();
-            cache.putAll(cacheMap);
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public void clear() {
-        try {
-            lock.lock();
-            this.cache.clear();
-        } finally {
-            lock.unlock();
-        }
-    }
+    protected ValueParser valueParser;
 
     /**
      * 处理数据
      * @param result 待处理的数据
      */
+    @Override
     public void handleData(List<Object> result) {
         if(ListUtils.isEmpty(result)) {
             return;
@@ -117,7 +54,7 @@ public class CacheHolder {
             // 目标字段
             Field targetField = FieldUtils.getField(field.getObj().getClass(), propertyName, true);
             // 将对象field.getObj()的属性propertyName设置为dictVal
-            Object parserVal = valueParser.parse(dictVal, targetField.getType());
+            Object parserVal = getValueParser().parse(dictVal, targetField.getType());
             BeanUtils.set(field.getObj(), propertyName, parserVal);
         }
         resolveField.clear();
@@ -127,7 +64,7 @@ public class CacheHolder {
      * 获取字段的字典
      * @return
      */
-    private Object getColumnCache(DictionaryEntity dict) {
+    protected Object getColumnCache(DictionaryEntity dict) {
         if(dict == null) {return null;}
         String tableName = dict.getTable();
         List<Map<String, Object>> propCache = getTableCache(tableName);
@@ -144,7 +81,7 @@ public class CacheHolder {
                     continue;
                 }
                 // 字典缓存中取出的值 比较 数据库中查询的值 fixup: 适配:"1" == 1
-                if(!comparator.compare(cache.get(key), entry.getValue())) {
+                if(!getComparator().compare(cache.get(key), entry.getValue())) {
                     flag = false;
                 }
             }
@@ -161,9 +98,9 @@ public class CacheHolder {
      * @param tableName 表名
      * @return 表字典
      */
-    private List<Map<String, Object>> getTableCache(String tableName) {
+    protected List<Map<String, Object>> getTableCache(String tableName) {
         List<Map<String, Object>> tableCache = new ArrayList<>();
-        Map<DictionaryTable, List<Map<String, Object>>> cacheMap = new HashMap<>(this.cache);
+        Map<DictionaryTable, List<Map<String, Object>>> cacheMap = new HashMap<>(this.getCache());
         Iterator<Map.Entry<DictionaryTable, List<Map<String, Object>>>> iterator = cacheMap.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<DictionaryTable, List<Map<String, Object>>> entry = iterator.next();
@@ -177,12 +114,23 @@ public class CacheHolder {
         return tableCache;
     }
 
-    public int size() {
-        try {
-            lock.lock();
-            return this.cache.size();
-        } finally {
-            lock.unlock();
-        }
+    @Override
+    public Comparator getComparator() {
+        return this.comparator;
+    }
+
+    @Override
+    public ValueParser getValueParser() {
+        return this.valueParser;
+    }
+
+    @Override
+    public void setComparator(Comparator comparator) {
+        this.comparator = comparator;
+    }
+
+    @Override
+    public void setValueParser(ValueParser valueParser) {
+        this.valueParser = valueParser;
     }
 }

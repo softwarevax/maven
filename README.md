@@ -11,6 +11,7 @@ deploy发布到远程仓库:
 * 0.0.1-RELEASE
 * 0.0.2.RELEASE
 * 0.0.3.RELEASE
+* 0.0.4.RELEASE
 
 maven依赖:
 ```

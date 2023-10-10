@@ -1,8 +1,8 @@
 package com.github.softwarevax.dict.core.database;
 
 
-import com.github.softwarevax.dict.core.interfaces.DictionaryTable;
 import com.github.softwarevax.dict.core.enums.DictionaryType;
+import com.github.softwarevax.dict.core.interfaces.DictionaryTable;
 
 
 public abstract class AbstractDbTable implements DictionaryTable {

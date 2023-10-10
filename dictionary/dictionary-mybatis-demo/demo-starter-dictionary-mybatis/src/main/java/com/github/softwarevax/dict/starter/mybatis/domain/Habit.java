@@ -1,6 +1,6 @@
 package com.github.softwarevax.dict.starter.mybatis.domain;
 
-import com.github.softwarevax.dict.core.Dictionary;
+import com.github.softwarevax.dict.core.Dict;
 import lombok.Data;
 
 import java.util.List;
@@ -25,20 +25,20 @@ public class Habit {
     /**
      * 对象: 字典嵌套
      */
-    @Dictionary
+    @Dict
     private ExtendUser createUser;
 
     /**
      * 集合: 字典嵌套
      */
-    @Dictionary
+    @Dict
     private List<ExtendUser> createUsers;
 
-    @Dictionary(table ="app_user", column = "name", value = "id", property = "updateUserName")
+    @Dict(table ="app_user", column = "name", value = "id", property = "updateUserName")
     private String updateUserId;
 
     private String updateUserName;
 
-    @Dictionary
+    @Dict
     private String state;
 }

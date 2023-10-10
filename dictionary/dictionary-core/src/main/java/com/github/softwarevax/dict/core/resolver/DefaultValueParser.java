@@ -1,9 +1,9 @@
 package com.github.softwarevax.dict.core.resolver;
 
-import com.github.softwarevax.dict.core.interfaces.DictionaryValueParser;
+import com.github.softwarevax.dict.core.interfaces.ValueParser;
 import com.github.softwarevax.dict.core.resolver.gsetter.Getter;
 
-public class DefaultDictionaryValueParser implements DictionaryValueParser {
+public class DefaultValueParser implements ValueParser {
 
     @Override
     public <T> T parse(Object val, Class<T> clazz) {
