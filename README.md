@@ -5,7 +5,7 @@ deploy发布到远程仓库:
 4个小时到https://search.maven.org
 
 一天到https://mvnrepository.com
-## 数据字典插件(当前版本0.0.3.RELEASE)
+## 数据字典插件(当前版本0.0.4.RELEASE)
 [github地址](https://github.com/softwarevax/maven.git)
 >版本列表(已提交到中央仓库)
 * 0.0.1-RELEASE
