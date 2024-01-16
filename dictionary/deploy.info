@@ -1,5 +1,5 @@
 1、mvn clean deploy -P release -projects dictionary-core,starter-dictionary-mybatis
-2、核验发布内容，https://oss.sonatype.org/#stagingRepositories，通过后release
+2、核验发布内容，https://oss.sonatype.org/#stagingRepositories，先close,通过后release
 3、半小时后查看，https://repo1.maven.org/maven2/
 
 解释：发布jar(dictionary-core,starter-dictionary-mybatis)包到中央仓库
