@@ -11,10 +11,13 @@ import com.github.softwarevax.support.utils.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.util.Assert;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
 
 import java.lang.reflect.AnnotatedElement;
@@ -133,6 +136,14 @@ public class PersistenceMethodInvokeNoticer implements MethodInvokeNoticer {
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+            try {
+                Resource resource = new ClassPathResource("docs/scripts.sql");
+                byte[] bytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
+                String content = new String(bytes, "utf-8");
+                logger.error(content);
+            } catch (Exception e1) {
+                logger.error(e1.getMessage(), e1);
+            }
             return false;
         }
         return true;

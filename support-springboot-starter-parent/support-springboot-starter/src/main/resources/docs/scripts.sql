@@ -1,4 +1,4 @@
--- mysql 脚本
+-- mysql 建表脚本
 -- lock
 DROP TABLE IF EXISTS `distribute_lock`;
 CREATE TABLE `distribute_lock`  (
