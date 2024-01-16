@@ -153,10 +153,13 @@ public class SupportHolder {
      */
     private void initMethod() {
         // 1、初始化method需要的配置
+        MethodConstant constant = supportCtx.get(PropertyKey.METHOD_CONSTANT);
+        if(!constant.getEnable()) {
+            return;
+        }
         DefaultPointcutAdvisor advisor = springCtx.getBean(DefaultPointcutAdvisor.class);
         MethodInterceptorAdvisor advice = (MethodInterceptorAdvisor) advisor.getAdvice();
         DefaultExpressMethodAdvice defaultAdvice = new DefaultExpressMethodAdvice();
-        MethodConstant constant = supportCtx.get(PropertyKey.METHOD_CONSTANT);
         defaultAdvice.setExpress(constant.getExpress());
         advice.register(defaultAdvice);
         // 需要被通知的类

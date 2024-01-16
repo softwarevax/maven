@@ -60,7 +60,7 @@ public class TestController {
     public User object() {
         User user = new User();
         user.setId("id");
-        user.setUserName("object");
+        user.setName("object");
         user.setSex("man");
         return user;
     }
@@ -75,7 +75,7 @@ public class TestController {
         try (OutputStream os = response.getOutputStream()) {
             User user = new User();
             user.setId("id");
-            user.setUserName("object");
+            user.setName("object");
             user.setSex("man");
             os.write(JSON.toJSONString(user).getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
@@ -101,7 +101,7 @@ public class TestController {
     public User exception() {
         User user = new User();
         user.setId("id");
-        user.setUserName("object");
+        user.setName("object");
         user.setSex("man");
         Assert.isTrue(1 == 0, "1不等于0");
         return user;

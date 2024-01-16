@@ -13,20 +13,5 @@ public class SupportDemoApplication {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext ctx = SpringApplication.run(SupportDemoApplication.class, args);
-        /*new Thread(() -> {
-            while (true) {
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                ThreadPoolTaskExecutor executor = ctx.getBean(ThreadPoolTaskExecutor.class);
-                ThreadPoolExecutor threadPoolExecutor = executor.getThreadPoolExecutor();
-                System.out.println("active count = " + executor.getActiveCount());
-                System.out.println("queue size = " + threadPoolExecutor.getQueue().size());
-                System.out.println("complete task = " + threadPoolExecutor.getCompletedTaskCount());
-                System.out.println("task count = "  + threadPoolExecutor.getTaskCount());
-            }
-        }).start();*/
     }
 }
