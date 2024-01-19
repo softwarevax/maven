@@ -37,7 +37,7 @@ public class DictionaryConfigure {
     /**
      * cache configuration
      */
-    private DictionaryCache cache;
+    private DictionaryCache cache = new DictionaryCache();
 
     public long getRefreshInterval() {
         return refreshInterval;

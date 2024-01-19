@@ -4,9 +4,9 @@ import com.github.softwarevax.dict.core.redis.RedisConfig;
 
 public class DictionaryCache {
 
-    private CacheType type;
+    private CacheType type = CacheType.MEMORY;
 
-    private RedisConfig redis;
+    private RedisConfig redis = new RedisConfig();
 
     public CacheType getType() {
         return type;
