@@ -18,6 +18,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.lang.reflect.AnnotatedElement;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
 
 @RestControllerAdvice
 @ConditionalOnProperty(name = "support.result.enable", havingValue = "true")
@@ -29,6 +31,15 @@ public class ResultAspect implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass) {
         //判断是否有加自定义注解，有就跳过，不返回返回结果包装实体
+        if(!Objects.isNull(constant.getExcludePackages()) && constant.getExcludePackages().size() > 0) {
+            String methodName = methodParameter.getMethod().getDeclaringClass().getName();
+            List<String> excludePackages = constant.getExcludePackages();
+            for(String pkg : excludePackages) {
+                if(methodName.startsWith(pkg)) {
+                    return false;
+                }
+            }
+        }
         AnnotatedElement annotatedElement = methodParameter.getAnnotatedElement();
         IgnoreResultWrapper ignoreResultWrapper = AnnotationUtils.findAnnotation(annotatedElement, IgnoreResultWrapper.class);
         return ignoreResultWrapper == null;
