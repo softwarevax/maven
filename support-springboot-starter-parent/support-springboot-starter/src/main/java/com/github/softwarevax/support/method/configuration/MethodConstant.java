@@ -48,6 +48,11 @@ public class MethodConstant {
     private Boolean resetEveryTime = false;
 
     /**
+     * 用户的标识，取header中的key为"user_id"的值，如果实现了IUserId接口，则IUserId.getUserId的优先级更高
+     */
+    private String userId = "user_id";
+
+    /**
      * methodTag字段的取值，取methodTag配置的注解的value, 若value为空，则取name,只有开启持久化，此配置才会生效
      * 如配置注解：io.swagger.annotations.ApiOperation，可将注解的value或者name属性存入methodTag字段
      */
@@ -107,5 +112,13 @@ public class MethodConstant {
 
     public void setResetEveryTime(Boolean resetEveryTime) {
         this.resetEveryTime = resetEveryTime;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

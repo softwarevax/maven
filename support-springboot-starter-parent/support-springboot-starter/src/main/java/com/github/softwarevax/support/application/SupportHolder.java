@@ -22,6 +22,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +109,21 @@ public class SupportHolder {
     public <T> List<T> getBeans(Class<T> clazz) {
         Map<String, T> beansOfType = springCtx.getBeansOfType(clazz);
         return new ArrayList<>(beansOfType.values());
+    }
+
+    public <T> boolean existsBean(Class<T> clazz) {
+        List<T> beans = getBeans(clazz);
+        if(!CollectionUtils.isEmpty(beans)) {
+            return true;
+        }
+        return false;
+    }
+
+    public <T> T getBean(Class<T> clazz) {
+        if(!existsBean(clazz)) {
+            return null;
+        }
+        return getBeans(clazz).get(0);
     }
 
     public void initializeLoaded() {

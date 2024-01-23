@@ -8,7 +8,7 @@ CREATE TABLE `distribute_lock`  (
     UNIQUE INDEX `KEY_INDEX`(`lock_key`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
--- method
+-- t_method，方法，每次启动，只有一个相同的方法，根据full_method_name判断
 DROP TABLE IF EXISTS `t_method`;
 CREATE TABLE `t_method` (
     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -24,6 +24,7 @@ CREATE TABLE `t_method` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用方法';
 
+-- t_method_invoke，方法调用，
 DROP TABLE IF EXISTS `t_method_invoke`;
 CREATE TABLE `t_method_invoke` (
    `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -39,10 +40,11 @@ CREATE TABLE `t_method_invoke` (
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用方法调用';
 
+-- t_method_interface，接口，每次启动，只有一个相同的接口，根据full_method_name判断，每次请求，会产生最多一个接口
 DROP TABLE IF EXISTS `t_method_interface`;
 CREATE TABLE `t_method_interface` (
     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `method_id` int(11) DEFAULT NULL COMMENT '方法id',
+    `method_id` int(11) DEFAULT NULL COMMENT '方法id, t_method.id',
     `method` varchar(20) COLLATE utf8_bin DEFAULT '' COMMENT '请求方式，get,post。。。，如果有支持多个，逗号分割',
     `mappings` varchar(500) COLLATE utf8_bin DEFAULT '' COMMENT '请求路径，不含contextPath，如果支持多个，逗号分割',
     `create_time` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -53,6 +55,7 @@ DROP TABLE IF EXISTS `t_method_interface_invoke`;
 CREATE TABLE `t_method_interface_invoke` (
      `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
      `invoke_id` int(11) DEFAULT NULL COMMENT 't_method_invoke.id',
+     `user_id` varchar(50) DEFAULT '' COMMENT '用户标识，可以使用其他类型，如bigint，默认为varchar',
      `scheme` varchar(40) COLLATE utf8_bin DEFAULT '' COMMENT '协议',
      `method` varchar(20) COLLATE utf8_bin DEFAULT '' COMMENT '方法，get，post。。。',
      `remote_addr` varchar(50) COLLATE utf8_bin DEFAULT '' COMMENT '请求端地址',
@@ -62,3 +65,27 @@ CREATE TABLE `t_method_interface_invoke` (
      `response_body` varchar(4000) COLLATE utf8_bin DEFAULT '' COMMENT '响应体',
      PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='应用接口方法调用';
+
+
+/*
+表关系
+select tm.full_method_name                  '方法全名',
+        tm.method                            '简称',
+        minvoke.parameter_val                '请求参数',
+        minvoke.invoke_id                    '调用id',
+        if(minvoke.expose = '1', '是', '否') '接口',
+        minvoke.return_val                   '返回值',
+        minvoke.elapsed_time                 '执行时间(ms)',
+        tm.method_tag                        '操作',
+        interface.mappings                   '接口映射',
+        iinvoke.headers                      '请求头',
+        iinvoke.user_id                      '用户id',
+        iinvoke.payload                      '负载',
+        iinvoke.remote_addr                  '请求地址',
+        iinvoke.response_status              '响应状态'
+from t_method_invoke minvoke
+     left join t_method tm on minvoke.method_id = tm.id
+     left join t_method_interface interface on tm.id = interface.method_id
+     left join t_method_interface_invoke iinvoke on iinvoke.invoke_id = minvoke.id
+order by minvoke.invoke_id;
+*/

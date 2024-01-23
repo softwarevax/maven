@@ -162,7 +162,11 @@ public class PersistenceMethodInvokeNoticer implements MethodInvokeNoticer {
         for (int i = 0; i < length; i++) {
             obj.put(argNames[i], argValues[i]);
         }
-        return obj.toJSONString();
+        try {
+            return obj.toJSONString();
+        } catch (Exception e) {
+            return StringUtils.EMPTY;
+        }
     }
 
     public boolean insertMethod(MethodPo po) {
@@ -205,8 +209,8 @@ public class PersistenceMethodInvokeNoticer implements MethodInvokeNoticer {
         Object[] sqlArgs = dynamicInfo.getSQLArgs();
         int rowNum = template.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(MethodSQL.INSERT_METHOD_INVOKE_SQL, Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(2, sqlArgs[1]);
             ps.setObject(1, sqlArgs[0]);
+            ps.setObject(2, sqlArgs[1]);
             ps.setObject(3, sqlArgs[2]);
             ps.setObject(4, sqlArgs[3]);
             ps.setObject(5, sqlArgs[4]);

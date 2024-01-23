@@ -47,5 +47,5 @@ public interface MethodSQL {
     /**
      * 新增方法接口调用
      */
-    String INSERT_METHOD_INTERFACE_INVOKE_SQL = "insert into t_method_interface_invoke(invoke_id, scheme, method, remote_addr, headers, payload, response_status, response_body) values(?, ?, ?, ?, ?, ?, ?, ?)";
+    String INSERT_METHOD_INTERFACE_INVOKE_SQL = "insert into t_method_interface_invoke(invoke_id, user_id, scheme, method, remote_addr, headers, payload, response_status, response_body) values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 }

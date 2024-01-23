@@ -18,6 +18,9 @@ import java.util.*;
 
 public class HttpServletUtils {
 
+    public static boolean isRequest() {
+        return !Objects.isNull(RequestContextHolder.getRequestAttributes());
+    }
 
     public static HttpServletRequest getRequest() {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -30,11 +33,17 @@ public class HttpServletUtils {
     }
 
     public static String getSessionId() {
+        if(!isRequest()) {
+            return StringUtils.EMPTY;
+        }
         HttpServletRequest request = getRequest();
         return request.getSession().getId();
     }
 
     public static String getQueryString() {
+        if(!isRequest()) {
+            return StringUtils.EMPTY;
+        }
         HttpServletRequest request = getRequest();
         String queryString = request.getQueryString();
         return queryString;

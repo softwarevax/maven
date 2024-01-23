@@ -2,6 +2,7 @@ package com.github.softwarevax.support.method.bean;
 
 import com.alibaba.fastjson.JSON;
 
+import java.io.Serializable;
 import java.util.Map;
 
 public class MethodInterfaceInvoke {
@@ -9,6 +10,8 @@ public class MethodInterfaceInvoke {
     private int id;
 
     private int invokeId;
+
+    private Serializable userId;
 
     private String schema;
 
@@ -38,6 +41,14 @@ public class MethodInterfaceInvoke {
 
     public void setInvokeId(int invokeId) {
         this.invokeId = invokeId;
+    }
+
+    public Serializable getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Serializable userId) {
+        this.userId = userId;
     }
 
     public String getSchema() {
@@ -97,15 +108,16 @@ public class MethodInterfaceInvoke {
     }
 
     public Object[] getSQLArgs() {
-        Object[] args = new Object[8];
+        Object[] args = new Object[9];
         args[0] = this.invokeId;
-        args[1] = this.schema;
-        args[2] = this.method;
-        args[3] = this.remoteAddr;
-        args[4] = JSON.toJSONString(headers);
-        args[5] = this.payload;
-        args[6] = JSON.toJSONString(this.responseStatus);
-        args[7] = JSON.toJSONString(this.responseBody);
+        args[1] = this.userId;
+        args[2] = this.schema;
+        args[3] = this.method;
+        args[4] = this.remoteAddr;
+        args[5] = JSON.toJSONString(headers);
+        args[6] = JSON.toJSONString(this.payload);
+        args[7] = JSON.toJSONString(this.responseStatus);
+        args[8] = JSON.toJSONString(this.responseBody);
         return args;
     }
 }

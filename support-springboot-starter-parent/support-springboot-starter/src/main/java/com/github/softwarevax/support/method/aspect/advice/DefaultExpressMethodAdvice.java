@@ -4,10 +4,8 @@ import com.github.softwarevax.support.application.PropertyKey;
 import com.github.softwarevax.support.application.SupportHolder;
 import com.github.softwarevax.support.configure.ThreadPoolDemander;
 import com.github.softwarevax.support.method.aspect.MethodInvokeNoticer;
-import com.github.softwarevax.support.method.bean.InvokeMethod;
-import com.github.softwarevax.support.method.bean.InvokeStackInfo;
-import com.github.softwarevax.support.method.bean.MethodInterfaceInvoke;
-import com.github.softwarevax.support.method.bean.WebInterface;
+import com.github.softwarevax.support.method.bean.*;
+import com.github.softwarevax.support.method.configuration.MethodConstant;
 import com.github.softwarevax.support.utils.CommonUtils;
 import com.github.softwarevax.support.utils.HttpServletUtils;
 import com.github.softwarevax.support.utils.IdWorker;
@@ -17,6 +15,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.aspectj.AspectJExpressionPointcut;
+import org.springframework.aop.framework.AopProxyUtils;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -38,6 +39,8 @@ public class DefaultExpressMethodAdvice implements AbstractExpressMethodAdvice, 
      */
     private LocalVariableTableParameterNameDiscoverer parameterNameDiscover = new LocalVariableTableParameterNameDiscoverer();
 
+    private AspectJExpressionPointcut expressTool = new AspectJExpressionPointcut();
+
     /**
      * 需要通知的对象
      */
@@ -49,9 +52,14 @@ public class DefaultExpressMethodAdvice implements AbstractExpressMethodAdvice, 
     private ThreadLocal<Stack<StopWatch>> stopWatch = new ThreadLocal<>();
 
     /**
-     * 调用id
+     * 调用栈
      */
     private ThreadLocal<InvokeStackInfo> invoke = new ThreadLocal<>();
+
+    /**
+     * 调用id
+     */
+    private ThreadLocal<Long> invokeIdThread = new ThreadLocal<>();
 
     /**
      * 线程池
@@ -73,43 +81,56 @@ public class DefaultExpressMethodAdvice implements AbstractExpressMethodAdvice, 
         StopWatch watch = new StopWatch();
         watch.start();
         stack.add(watch);
+        // 1、获取接口调用信息
         MethodInterfaceInvoke interfaceInvoke = getMethodInterfaceInvokeFromServlet();
-        invoke.set(new InvokeStackInfo(interfaceInvoke, HttpServletUtils.getSessionId(), IdWorker.getId()));
+        // 2、调用的id，同一次请求的id，共同一个invokeId
+        if(Objects.isNull(invokeIdThread.get())) {
+            Long invokeId = IdWorker.getId();
+            invokeIdThread.set(invokeId);
+        }
+        // 3、构造调用栈，controller -> service -> mapper -> service -> controller
+        InvokeStackInfo invokeStackInfo = new InvokeStackInfo(interfaceInvoke, HttpServletUtils.getSessionId(), invokeIdThread.get());
+        invoke.set(invokeStackInfo);
     }
 
     @Override
     public void afterReturn(Object obj, MethodInvocation invocation) {
+        // 4、将方法的返回结果，放入调用栈，后面统一处理
         InvokeStackInfo invokeStackInfo = invoke.get();
         invokeStackInfo.setReturnObj(obj);
-    }
-
-    @Override
-    public void after(MethodInvocation invocation) {
+        // 5、处理数据，并考虑是否入库
         Stack<StopWatch> stack = stopWatch.get();
         StopWatch watch = stack.pop();
         if(CollectionUtils.isEmpty(this.noticers)) {
             return;
         }
-        // 运行时长，单位毫秒
-        Assert.notNull(this.executor, "线程池未成功初始化");
-        InvokeStackInfo invokeStackInfo = invoke.get();
         // 避免放在线程池中等待的时间，计算到运行时间中
         long elapsedTime = watch.getTime();
-        executor.execute(() -> {
-            // 提取方法中的数据
-            InvokeMethod invokeMethod = parseMethod(invocation, invokeStackInfo.getReturnObj());
-            invokeMethod.setStartTime(watch.getStartTime());
-            invokeMethod.setInvokeId(invokeStackInfo.getInvokeId());
-            invokeMethod.setSessionId(invokeStackInfo.getSessionId());
-            invokeMethod.setElapsedTime(elapsedTime);
-            invokeMethod.setInterfaceInvoke(invokeStackInfo.getInterfaceInvoke());
-            noticers.stream().forEach(row -> row.callBack(invokeMethod));
-        });
+        // 运行时长，单位毫秒
+        Assert.notNull(this.executor, "线程池未成功初始化");
+        // 提取方法和请求中的数据
+        InvokeMethod invokeMethod = parseMethod(invocation, invokeStackInfo.getReturnObj());
+        invokeMethod.setStartTime(watch.getStartTime());
+        invokeMethod.setInvokeId(invokeStackInfo.getInvokeId());
+        // 如果不是请求方法，sessionId则为空
+        invokeMethod.setSessionId(invokeStackInfo.getSessionId());
+        invokeMethod.setElapsedTime(elapsedTime);
+        invokeMethod.setInterfaceInvoke(invokeStackInfo.getInterfaceInvoke());
+        executor.execute(() -> noticers.stream().forEach(row -> row.callBack(invokeMethod)));
+    }
+
+    @Override
+    public void after(MethodInvocation invocation) {
+        Stack<StopWatch> stack = stopWatch.get();
+        // 如果计时器都被取完了，说明调用栈已经执行到最后异一步了，则将线程中的结果清楚
+        if(stack.isEmpty()) {
+            invoke.remove();
+            invokeIdThread.remove();
+        }
     }
 
     @Override
     public void throwException(MethodInvocation invocation, Throwable e) {
-
     }
 
     @Override
@@ -148,10 +169,12 @@ public class DefaultExpressMethodAdvice implements AbstractExpressMethodAdvice, 
         SupportHolder holder = SupportHolder.getInstance();
         Map<String, WebInterface> interfaces = holder.getInterfaces();
         if(interfaces.containsKey(fullMethodName)) {
+            // 判断是否为接口
             invokeMethod.setExpose(true);
             invokeMethod.setInterfaces(interfaces.get(fullMethodName));
         }
         String argument = StringUtils.substring(fullMethodName, StringUtils.indexOf(fullMethodName, "(") + 1, StringUtils.indexOf(fullMethodName, (")")));
+        // 解析请求的参数
         if(method.getDeclaringClass().isInterface()) {
             Parameter[] parameters = method.getParameters();
             String[] args = Arrays.asList(parameters).stream().map(Parameter::getName).toArray(String[]::new);
@@ -180,14 +203,35 @@ public class DefaultExpressMethodAdvice implements AbstractExpressMethodAdvice, 
 
     /**
      * 获取请求中的信息
-     * @return
+     * @return 接口调用的信息
      */
     private MethodInterfaceInvoke getMethodInterfaceInvokeFromServlet() {
+        if(!HttpServletUtils.isRequest()) {
+            return null;
+        }
         MethodInterfaceInvoke interfaceInvoke = new MethodInterfaceInvoke();
         interfaceInvoke.setMethod(HttpServletUtils.getMethod());
-        interfaceInvoke.setHeaders(HttpServletUtils.getHeaders());
+        Map<String, String> headers = HttpServletUtils.getHeaders();
+        interfaceInvoke.setHeaders(headers);
+        // 获取用户唯一标识
+        SupportHolder instance = SupportHolder.getInstance();
+        MethodConstant constant = instance.get(PropertyKey.METHOD_CONSTANT);
+        if(headers.containsKey(constant.getUserId())) {
+            // 从请求头中获取
+            interfaceInvoke.setUserId(headers.get(constant.getUserId()));
+        }
+        if (instance.existsBean(IUserId.class)) {
+            // 自定义设置
+            IUserId bean = instance.getBean(IUserId.class);
+            if(AopUtils.isAopProxy(bean)) {
+                // 如果实现IUserId接口的类，符合当前切面的表达式，则IUserId使用原对象，而不使用代理对象
+                bean = (IUserId)AopProxyUtils.getSingletonTarget(bean);
+            }
+            interfaceInvoke.setUserId(String.valueOf(bean.getUserId()));
+        }
         interfaceInvoke.setRemoteAddr(HttpServletUtils.remoteAddress());
         interfaceInvoke.setSchema(HttpServletUtils.getSchema());
+        interfaceInvoke.setPayload(HttpServletUtils.compositeMap());
         interfaceInvoke.setResponseStatus(HttpServletUtils.getResponseStatus());
         return interfaceInvoke;
     }
@@ -195,7 +239,7 @@ public class DefaultExpressMethodAdvice implements AbstractExpressMethodAdvice, 
     /**
      * 获取方法注解的属性
      * @param method
-     * @return
+     * @return 获取方法注解的属性
      */
     private Map<Class, Map<String, Object>> getMethodAnnotation(Method method) {
         Map<Class, Map<String, Object>> map = new HashMap<>();
