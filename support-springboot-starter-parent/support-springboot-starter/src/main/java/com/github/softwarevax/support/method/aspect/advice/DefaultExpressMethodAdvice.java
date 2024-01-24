@@ -218,7 +218,7 @@ public class DefaultExpressMethodAdvice implements AbstractExpressMethodAdvice, 
                 // 如果实现IUserId接口的类，符合当前切面的表达式，则IUserId使用原对象，而不使用代理对象
                 bean = (IUserId)AopProxyUtils.getSingletonTarget(bean);
             }
-            interfaceInvoke.setUserId(bean.getUserId());
+            interfaceInvoke.setUserId(bean.getUserId(HttpServletUtils.getRequest()));
         }
         interfaceInvoke.setRemoteAddr(HttpServletUtils.remoteAddress());
         interfaceInvoke.setSchema(HttpServletUtils.getSchema());
