@@ -18,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -213,5 +214,11 @@ public class SupportHolder {
         BeanDefinitionRegistry beanFactory = (BeanDefinitionRegistry) ctx.getBeanFactory();
         beanFactory.registerBeanDefinition(name, beanDefinition);
         return springCtx.getBean(name, clazz);
+    }
+
+    public boolean registerBean(String name, Object object) {
+        DefaultListableBeanFactory factory = (DefaultListableBeanFactory) springCtx.getAutowireCapableBeanFactory();
+        factory.registerSingleton(name, object);
+        return true;
     }
 }

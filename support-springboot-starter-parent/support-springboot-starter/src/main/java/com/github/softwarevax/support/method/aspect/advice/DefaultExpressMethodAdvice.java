@@ -5,7 +5,6 @@ import com.github.softwarevax.support.application.SupportHolder;
 import com.github.softwarevax.support.configure.ThreadPoolDemander;
 import com.github.softwarevax.support.method.aspect.MethodInvokeNoticer;
 import com.github.softwarevax.support.method.bean.*;
-import com.github.softwarevax.support.method.configuration.MethodConstant;
 import com.github.softwarevax.support.utils.CommonUtils;
 import com.github.softwarevax.support.utils.HttpServletUtils;
 import com.github.softwarevax.support.utils.IdWorker;
@@ -15,7 +14,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
@@ -38,8 +36,6 @@ public class DefaultExpressMethodAdvice implements AbstractExpressMethodAdvice, 
      * 获取方法参数名实例
      */
     private LocalVariableTableParameterNameDiscoverer parameterNameDiscover = new LocalVariableTableParameterNameDiscoverer();
-
-    private AspectJExpressionPointcut expressTool = new AspectJExpressionPointcut();
 
     /**
      * 需要通知的对象
@@ -215,11 +211,6 @@ public class DefaultExpressMethodAdvice implements AbstractExpressMethodAdvice, 
         interfaceInvoke.setHeaders(headers);
         // 获取用户唯一标识
         SupportHolder instance = SupportHolder.getInstance();
-        MethodConstant constant = instance.get(PropertyKey.METHOD_CONSTANT);
-        if(headers.containsKey(constant.getUserId())) {
-            // 从请求头中获取
-            interfaceInvoke.setUserId(headers.get(constant.getUserId()));
-        }
         if (instance.existsBean(IUserId.class)) {
             // 自定义设置
             IUserId bean = instance.getBean(IUserId.class);
@@ -227,7 +218,7 @@ public class DefaultExpressMethodAdvice implements AbstractExpressMethodAdvice, 
                 // 如果实现IUserId接口的类，符合当前切面的表达式，则IUserId使用原对象，而不使用代理对象
                 bean = (IUserId)AopProxyUtils.getSingletonTarget(bean);
             }
-            interfaceInvoke.setUserId(String.valueOf(bean.getUserId()));
+            interfaceInvoke.setUserId(bean.getUserId());
         }
         interfaceInvoke.setRemoteAddr(HttpServletUtils.remoteAddress());
         interfaceInvoke.setSchema(HttpServletUtils.getSchema());

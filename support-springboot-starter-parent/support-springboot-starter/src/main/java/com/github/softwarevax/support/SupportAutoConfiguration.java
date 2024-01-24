@@ -6,6 +6,7 @@ import com.github.softwarevax.support.configure.SupportConstant;
 import com.github.softwarevax.support.lock.configuration.LockConstant;
 import com.github.softwarevax.support.method.aspect.MethodInterceptorAdvisor;
 import com.github.softwarevax.support.method.configuration.MethodConstant;
+import com.github.softwarevax.support.method.filter.RepeatableRequestBodyFilter;
 import com.github.softwarevax.support.page.configuration.PaginationConstant;
 import com.github.softwarevax.support.result.configuration.ResultConstant;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -55,6 +57,17 @@ public class SupportAutoConfiguration implements ApplicationListener<Application
         advisor.setAdvice(interceptor);
         advisor.setOrder(methodConstant.getOrder());
         return advisor;
+    }
+
+    @Bean
+    @ConditionalOnProperty(value = "support.method.enable", havingValue = "true")
+    public FilterRegistrationBean<RepeatableRequestBodyFilter> Filters() {
+        FilterRegistrationBean<RepeatableRequestBodyFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new RepeatableRequestBodyFilter());
+        registrationBean.addUrlPatterns("/*");
+        registrationBean.setName("readRequestBodyFilter");
+        registrationBean.setOrder(1);
+        return registrationBean;
     }
 
     /**
