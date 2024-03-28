@@ -5,6 +5,9 @@
     <resultMap type="com.github.softwarevax.dict.starter.mybatis.domain.Habit" id="AppHabitMap">
         <result property="id" column="habitId" jdbcType="VARCHAR"/>
         <result property="habitName" column="habit_name" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="createUserId" column="create_user_id" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
         <result property="updateUserId" column="update_user_id" jdbcType="VARCHAR"/>
         <result property="state" column="habitState" jdbcType="VARCHAR"/>
         <association property="createUser" javaType="com.github.softwarevax.dict.starter.mybatis.domain.ExtendUser">
@@ -22,7 +25,22 @@
     </resultMap>
 
     <select id="queryList" resultMap="AppHabitMap">
-        select ah.id as habitId, ah.habit_name, ah.update_user_id, ah.state as habitState, u.id as userId, u.name, u.state as userState, u.sex as userSex from app_habit ah left join app_user u on ah.create_user_id = u.id
+        SELECT
+            ah.id AS habitId,
+            ah.habit_name,
+            ah.create_time,
+            ah.create_user_id,
+            ah.update_user_id,
+            ah.update_time,
+            ah.update_user_id,
+            ah.state AS habitState,
+            u.id AS userId,
+            u.NAME,
+            u.state AS userState,
+            u.sex AS userSex
+        FROM
+            app_habit ah
+        LEFT JOIN app_user u ON ah.create_user_id = u.id
     </select>
 
 
