@@ -19,6 +19,11 @@ public class ResultConstant {
     private Class<? extends IResult> wrapperImpl = com.github.softwarevax.support.result.ResultDto.class;
 
     /**
+     * 生效的包名, 默认为空(不限制)
+     */
+    private String basePackages;
+
+    /**
      * 不需要对接口的结果进行包装的包名，多个之间，逗号分割
      */
     private List<String> excludePackages;
@@ -45,5 +50,13 @@ public class ResultConstant {
 
     public void setExcludePackages(List<String> excludePackages) {
         this.excludePackages = excludePackages;
+    }
+
+    public String getBasePackages() {
+        return basePackages;
+    }
+
+    public void setBasePackages(String basePackages) {
+        this.basePackages = basePackages;
     }
 }

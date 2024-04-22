@@ -3,25 +3,15 @@ package com.github.softwarevax.support.result;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-
-import java.util.LinkedHashMap;
+import com.github.softwarevax.support.utils.StringUtils;
 
 public class ResultDto<T> implements IResult {
 
-    @Override
-    public String returnString(Object obj) {
-        return ResultDto.success(obj);
-    }
-
-    @Override
-    public <T> T returnDto(Object obj) {
-        return (T) ResultDto.successT(obj);
-    }
 
     /**
      * 接口调用返回状态
      */
-    public enum Status{
+    public enum Status {
         /**
          * 返回成功或失败的messgae
          */
@@ -191,10 +181,37 @@ public class ResultDto<T> implements IResult {
         return JSON.toJSONString(this);
     }
 
+    /**
+     * 将返回结果转字符串
+     *
+     * @param flag
+     * @param code
+     * @param obj
+     * @param message
+     * @return 字符串
+     */
     @Override
-    public <T> T error(LinkedHashMap<String, Object> map) {
-        ResultDto error = IResult.super.error(map);
-        error.setFlag(false);
-        return (T) error;
+    public String toJSONString(boolean flag, int code, Object obj, String message) {
+        return result(flag, obj, code, message);
+    }
+
+    /**
+     * 将返回结果，包装成DTO
+     *
+     * @param flag
+     * @param code
+     * @param obj
+     * @param message
+     * @return 实体
+     */
+    @Override
+    public ResultDto<T> returnDTO(boolean flag, int code, Object obj, String message) {
+        ResultDto resultDto = new ResultDto<>();
+        resultDto.data = obj;
+        resultDto.flag = flag;
+        resultDto.code = code;
+        String msg = flag ? Status.SUCCESS.message : Status.FAIL.message;
+        resultDto.message = StringUtils.isBlank(message) ? msg : message;
+        return resultDto;
     }
 }

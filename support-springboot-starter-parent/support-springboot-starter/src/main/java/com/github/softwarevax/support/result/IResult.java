@@ -1,7 +1,5 @@
 package com.github.softwarevax.support.result;
 
-import java.util.LinkedHashMap;
-
 public interface IResult {
 
     /**
@@ -9,7 +7,7 @@ public interface IResult {
      * @param obj
      * @return 字符串
      */
-    String returnString(Object obj);
+    String toJSONString(boolean flag, int code, Object obj, String message);
 
     /**
      * 将返回结果，包装成DTO
@@ -17,15 +15,5 @@ public interface IResult {
      * @param <T>
      * @return 实体
      */
-    <T> T returnDto(Object obj);
-
-    /**
-     * 异常处理
-     * @param map 系统返回的异常
-     * @param <T> dto包装实体
-     * @return 系统返回的异常包装实体
-     */
-    default <T> T error(LinkedHashMap<String, Object> map) {
-        return returnDto(map);
-    }
+    <T> T returnDTO(boolean flag, int code, Object obj, String message);
 }
