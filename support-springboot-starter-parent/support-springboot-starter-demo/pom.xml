@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>com.github.softwarevax</groupId>
 			<artifactId>support-springboot-starter</artifactId>
-			<version>0.0.4.RELEASE</version>
+			<version>0.0.7.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

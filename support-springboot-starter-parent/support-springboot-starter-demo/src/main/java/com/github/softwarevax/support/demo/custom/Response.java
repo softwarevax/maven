@@ -8,12 +8,12 @@ public class Response<T> implements IResult {
     private T data;
 
     @Override
-    public String returnString(Object obj) {
-        return JSON.toJSONString(obj);
+    public String toJSONString(boolean flag, int code, Object obj, String message) {
+        return JSON.toJSONString(returnDTO(flag, code, obj, message));
     }
 
     @Override
-    public Response returnDto(Object obj) {
+    public Response returnDTO(boolean flag, int code, Object obj, String message) {
         Response response = new Response();
         response.setData(obj);
         return response;

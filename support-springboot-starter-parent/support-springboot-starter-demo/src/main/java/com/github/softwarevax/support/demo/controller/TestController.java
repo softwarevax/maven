@@ -47,7 +47,7 @@ public class TestController {
     @ResponseBody
     @GetMapping("/dto/hello")
     public ResultDto<String> dto() {
-        return ResultDto.successT("hello dto");
+        return ResultDto.success("hello dto");
     }
 
     /**

@@ -2,7 +2,6 @@ package com.github.softwarevax.support.result;
 
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.softwarevax.support.utils.StringUtils;
 
 public class ResultDto<T> implements IResult {
@@ -67,62 +66,61 @@ public class ResultDto<T> implements IResult {
         this.message = message;
     }
 
-    public static <T> String result(boolean flag, T data, int code, String message) {
-        ResultDto resultDto = new ResultDto();
+    public static <T> ResultDto<T> result(boolean flag, T data, int code, String message) {
+        ResultDto<T> resultDto = new ResultDto();
         resultDto.flag = flag;
         resultDto.data = data;
         resultDto.code = code;
         resultDto.message = message;
-        //将值为null的字段设置为"",将值为null的list设置为[]
-        return JSON.toJSONString(resultDto, SerializerFeature.WriteNullListAsEmpty, SerializerFeature.WriteNullStringAsEmpty);
+        return resultDto;
     }
 
-    public static String result(boolean flag, int code, String message) {
+    public static <T> ResultDto<T> result(boolean flag, int code, String message) {
         return result(flag, null, code, message);
     }
 
-    public static String result(boolean flag) {
+    public static <T> ResultDto<T> result(boolean flag) {
         Status status = flag ? Status.SUCCESS : Status.FAIL;
         return result(flag, null, status.code, status.message);
     }
 
-    public static <T> String success(T data, int code, String message) {
+    public static <T> ResultDto<T> success(T data, int code, String message) {
         return result(true, data, code, message);
     }
 
-    public static <T> String success(T data, String message) {
+    public static <T> ResultDto<T> success(T data, String message) {
         return result(true, data, Status.SUCCESS.code, message);
     }
 
-    public static <T> String success(T data) {
+    public static <T> ResultDto<T> success(T data) {
         return success(data, Status.SUCCESS.message);
     }
 
-    public static String success() {
+    public static <T> ResultDto<T> success() {
         return success(null, Status.SUCCESS.message);
     }
 
-    public static String success(String message) {
+    public static <T> ResultDto<T> success(String message) {
         return success(null, message);
     }
 
-    public static <T> String fail(T data, int code, String message) {
+    public static <T> ResultDto<T> fail(T data, int code, String message) {
         return result(false, data, code, message);
     }
 
-    public static <T> String fail(T data, String message) {
+    public static <T> ResultDto<T> fail(T data, String message) {
         return result(false, data, Status.FAIL.code, message);
     }
 
-    public static <T> String fail(T data) {
+    public static <T> ResultDto<T> fail(T data) {
         return fail(data, Status.FAIL.message);
     }
 
-    public static String fail(String message) {
+    public static <T> ResultDto<T> fail(String message) {
         return fail(null, message);
     }
 
-    public static String fail() {
+    public static <T> ResultDto<T> fail() {
         return fail(null, Status.FAIL.message);
     }
 
@@ -158,24 +156,6 @@ public class ResultDto<T> implements IResult {
         this.code = code;
     }
 
-    public static <T> ResultDto<T> successT(T data) {
-        ResultDto<T> resultDto = new ResultDto<>();
-        resultDto.data = data;
-        resultDto.flag = true;
-        resultDto.code = Status.SUCCESS.code;
-        resultDto.message = Status.SUCCESS.message;
-        return resultDto;
-    }
-
-    public static <T> ResultDto<T> failT(T data) {
-        ResultDto<T> resultDto = new ResultDto<>();
-        resultDto.data = data;
-        resultDto.flag = false;
-        resultDto.code = Status.FAIL.code;
-        resultDto.message = Status.FAIL.message;
-        return resultDto;
-    }
-
     @Override
     public String toString() {
         return JSON.toJSONString(this);
@@ -192,7 +172,7 @@ public class ResultDto<T> implements IResult {
      */
     @Override
     public String toJSONString(boolean flag, int code, Object obj, String message) {
-        return result(flag, obj, code, message);
+        return JSON.toJSONString(result(flag, obj, code, message));
     }
 
     /**
