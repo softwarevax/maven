@@ -5,6 +5,7 @@ import com.github.softwarevax.support.application.SupportHolder;
 import com.github.softwarevax.support.configure.SupportConstant;
 import com.github.softwarevax.support.lock.configuration.LockConstant;
 import com.github.softwarevax.support.method.aspect.MethodInterceptorAdvisor;
+import com.github.softwarevax.support.method.aspect.MethodPointcutAdvisor;
 import com.github.softwarevax.support.method.configuration.MethodConstant;
 import com.github.softwarevax.support.method.filter.RepeatableRequestBodyFilter;
 import com.github.softwarevax.support.page.configuration.PaginationConstant;
@@ -12,7 +13,6 @@ import com.github.softwarevax.support.result.configuration.ResultConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
-import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -46,13 +46,13 @@ public class SupportAutoConfiguration implements ApplicationListener<Application
 
     @Bean
     @ConditionalOnProperty(value = "support.method.enable", havingValue = "true")
-    public DefaultPointcutAdvisor methodAdvisor() {
+    public MethodPointcutAdvisor methodAdvisor() {
         Assert.hasText(methodConstant.getExpress(), "请配置切点表达式");
         MethodInterceptorAdvisor interceptor = new MethodInterceptorAdvisor();
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
         pointcut.setExpression(methodConstant.getExpress());
         logger.info("method aop expression = {}", methodConstant.getExpress());
-        DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor();
+        MethodPointcutAdvisor advisor = new MethodPointcutAdvisor();
         advisor.setPointcut(pointcut);
         advisor.setAdvice(interceptor);
         advisor.setOrder(methodConstant.getOrder());

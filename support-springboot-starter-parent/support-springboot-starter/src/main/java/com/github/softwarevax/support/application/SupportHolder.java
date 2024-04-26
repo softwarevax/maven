@@ -5,6 +5,7 @@ import com.github.softwarevax.support.configure.SupportConstant;
 import com.github.softwarevax.support.configure.ThreadPoolDemander;
 import com.github.softwarevax.support.method.aspect.MethodInterceptorAdvisor;
 import com.github.softwarevax.support.method.aspect.MethodInvokeNoticer;
+import com.github.softwarevax.support.method.aspect.MethodPointcutAdvisor;
 import com.github.softwarevax.support.method.aspect.PersistenceMethodInvokeNoticer;
 import com.github.softwarevax.support.method.aspect.advice.DefaultExpressMethodAdvice;
 import com.github.softwarevax.support.method.bean.WebInterface;
@@ -13,7 +14,6 @@ import com.github.softwarevax.support.utils.HttpServletUtils;
 import com.github.softwarevax.support.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -174,7 +174,7 @@ public class SupportHolder {
         if(!constant.getEnable()) {
             return;
         }
-        DefaultPointcutAdvisor advisor = springCtx.getBean(DefaultPointcutAdvisor.class);
+        MethodPointcutAdvisor advisor = springCtx.getBean(MethodPointcutAdvisor.class);
         MethodInterceptorAdvisor advice = (MethodInterceptorAdvisor) advisor.getAdvice();
         DefaultExpressMethodAdvice defaultAdvice = new DefaultExpressMethodAdvice();
         defaultAdvice.setExpress(constant.getExpress());
